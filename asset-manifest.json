@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/globalgaming/static/css/main.d1b05096.chunk.css",
+    "main.js": "/globalgaming/static/js/main.04ce03ee.chunk.js",
+    "main.js.map": "/globalgaming/static/js/main.04ce03ee.chunk.js.map",
+    "runtime-main.js": "/globalgaming/static/js/runtime-main.b18b6b02.js",
+    "runtime-main.js.map": "/globalgaming/static/js/runtime-main.b18b6b02.js.map",
+    "static/js/2.a982d090.chunk.js": "/globalgaming/static/js/2.a982d090.chunk.js",
+    "static/js/2.a982d090.chunk.js.map": "/globalgaming/static/js/2.a982d090.chunk.js.map",
+    "index.html": "/globalgaming/index.html",
+    "precache-manifest.640dad01a2222d5a5756c8ff3abb8ba3.js": "/globalgaming/precache-manifest.640dad01a2222d5a5756c8ff3abb8ba3.js",
+    "service-worker.js": "/globalgaming/service-worker.js",
+    "static/css/main.d1b05096.chunk.css.map": "/globalgaming/static/css/main.d1b05096.chunk.css.map",
+    "static/js/2.a982d090.chunk.js.LICENSE.txt": "/globalgaming/static/js/2.a982d090.chunk.js.LICENSE.txt",
+    "static/media/logo.svg": "/globalgaming/static/media/logo.5d5d9eef.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.b18b6b02.js",
+    "static/js/2.a982d090.chunk.js",
+    "static/css/main.d1b05096.chunk.css",
+    "static/js/main.04ce03ee.chunk.js"
+  ]
+}
