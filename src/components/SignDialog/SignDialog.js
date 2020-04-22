@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 // Actions
-import { setOpenSignDialog } from '../../actions/SignDialog';
+import * as actions from '../../actions/SignDialog';
 
 // Components
 import Signin from '../Signin/Signin';
-// import Signup from '../Signup/Signup';
+import Signup from '../Signup/Signup';
 
 // Material UI Components
 import { makeStyles, Dialog, DialogTitle, DialogContent, Fade} from '@material-ui/core';
@@ -19,8 +19,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const SignDialog = ( {openSignDialog, setOpenSignDialog, users} ) => {
+const SignDialog = ( {openSignDialog, users, setOpenSignDialog, setUsers, setUser} ) => {
     const Style = useStyles();
+
 
     const [currentPage, setCurrentPage] = useState('in');
 
@@ -47,6 +48,7 @@ const SignDialog = ( {openSignDialog, setOpenSignDialog, users} ) => {
                 }, 1000);
                 return;
             case 'correct':
+                setOpenSignDialog(false);
                 setSignInAnimation(true);
                 setSignUpAnimation(true);
 
@@ -60,6 +62,12 @@ const SignDialog = ( {openSignDialog, setOpenSignDialog, users} ) => {
     }
 
     const handleUpdateState = (users, user) => {
+        // Setting users and user in local storage
+        localStorage.setItem("users", JSON.stringify(users));
+        localStorage.setItem('user', JSON.stringify(user));
+
+        setUsers(users);
+        setUser(user);
     }
 
     return (
@@ -86,7 +94,7 @@ const SignDialog = ( {openSignDialog, setOpenSignDialog, users} ) => {
                 {
                     currentPage === "in"
                         ? <div className={signInAnimation === true ? 'animated fadeIn' : 'animated fadeOut'}><Signin users={users} handleClickDialog={handleClickDialog} handleUpdateState={handleUpdateState} /></div>
-                            : null/*<div className={signUpAnimation === true ? 'animated fadeIn' : 'animated fadeOut'}><Signup users={users} handleClickDialog={handleClickDialog} handleUpdateState={handleUpdateState} /></div>*/
+                            : <div className={signUpAnimation === true ? 'animated fadeIn' : 'animated fadeOut'}><Signup users={users} handleClickDialog={handleClickDialog} handleUpdateState={handleUpdateState} /></div>
                 }
             </DialogContent>
         </Dialog>
@@ -103,7 +111,11 @@ const mapStateToProps = (state) => {
 
 // Sending some data to an action
 const matchDispatchToProps = (dispatch) => {
-    return bindActionCreators({setOpenSignDialog: setOpenSignDialog}, dispatch);
+    return bindActionCreators({
+        setOpenSignDialog: actions.setOpenSignDialog,
+        setUsers: actions.setUsers,
+        setUser: actions.setUser
+    }, dispatch);
 }
 
 export default connect(mapStateToProps, matchDispatchToProps)(SignDialog);

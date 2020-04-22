@@ -80,6 +80,22 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+const newAvatar = (item, style, handleUpdateTextFields) => {
+    return(
+        <Tooltip key={item.id} title={item.username} placement="bottom">
+            <Avatar
+                alt={item.username}
+                className={style}
+                style={{backgroundColor: item.color}}
+                variant="rounded"
+                onClick={() => handleUpdateTextFields(item)}
+            >
+                {item.initials}
+            </Avatar>
+        </Tooltip>
+    );
+}
+
 export default function Signin( {users, handleClickDialog, handleUpdateState} ) {
     const Style = useStyles();
 
@@ -92,9 +108,9 @@ export default function Signin( {users, handleClickDialog, handleUpdateState} ) 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const guestPopperOpen = Boolean(anchorEl);
 
-    // const handleUpdateTextFields = (user) => {
-    //     setUsername(user.username);
-    // }
+    const handleUpdateTextFields = (user) => {
+        setUsername(user.username);
+    }
 
     const handleClickSignin = (event, type) => {
         event.preventDefault();
@@ -135,7 +151,42 @@ export default function Signin( {users, handleClickDialog, handleUpdateState} ) 
     return (
         <Grid container direction="column" spacing={1}>
             <Grid item>
-
+                {
+                    (users.length === 0)
+                        ? null
+                            : 
+                            <React.Fragment>
+                                <Typography align="left" color="textPrimary">Accounts: </Typography>
+                                <Toolbar disableGutters className={Style.AccountsToolbar}>
+                                    <Hidden smUp>
+                                        {
+                                            users.map((item, index) => {
+                                                return (index > 10)
+                                                    ? null
+                                                        :
+                                                        newAvatar(item, Style.AvatarSmall, handleUpdateTextFields)
+                                            })
+                                        }
+                                    </Hidden>
+                                    <Hidden xsDown>
+                                        {
+                                            users.map((item, index) => {
+                                                return (index > 10)
+                                                    ? null
+                                                        :
+                                                        newAvatar(item, Style.Avatar, handleUpdateTextFields)
+                                            })
+                                        }
+                                    </Hidden>
+                                </Toolbar>
+                                <Hidden smUp>
+                                    <Box my={1} />
+                                </Hidden>
+                                <Hidden xsDown>
+                                    <Box my={2} />
+                                </Hidden>
+                            </React.Fragment>
+                }
             </Grid>
             <Grid item>
                 <FormControl className={Style.FormControl}>
@@ -172,8 +223,9 @@ export default function Signin( {users, handleClickDialog, handleUpdateState} ) 
                 </FormControl>
             </Grid>
             <Grid item>
-                <Box mt={2}>
+                <Box mt={1}>
                     <Typography align="center" className={error === true ? Style.Error : error === false ? Style.Correct : Style.Hidden}>{error === true ? 'Sign in credentials are incorrect!' : error === false ? 'Sign in credentials are correct!' : ''}</Typography>
+                    <Box mb={1} />
                     <Button 
                         className={Style.Button} 
                         color="primary"
@@ -187,7 +239,7 @@ export default function Signin( {users, handleClickDialog, handleUpdateState} ) 
                         aria-owns={guestPopperOpen ? 'guestPopper' : undefined}
                         aria-haspopup="true"
                         className={Style.Button} 
-                        color="secondary"
+                        color="default"
                         disableRipple 
                         fullWidth 
                         size="large" 
@@ -197,7 +249,7 @@ export default function Signin( {users, handleClickDialog, handleUpdateState} ) 
                         onMouseLeave={handleGuestPopperClose}
                         >Sign in as guest</Button>
                     <Popper
-                        id="guestPopper"
+                        id="guestPopperSignup"
                         className={Style.Popover}
                         anchorEl={anchorEl}
                         placement="bottom"
