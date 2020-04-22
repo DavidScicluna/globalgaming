@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {HashRouter as Router, Switch, Route} from "react-router-dom";
 
 // Components
+import SignDialog from '../components/SignDialog/SignDialog';
 
 // Material UI Components
 import { CssBaseline, createMuiTheme, ThemeProvider, Container, Box } from '@material-ui/core';
@@ -38,8 +40,15 @@ export default class App extends React.Component{
       <React.Fragment>
         <CssBaseline />
           <ThemeProvider theme={theme}>
-            <Container className='Container' maxWidth='md' disableGutters>
-              <h1>Hello</h1>
+            {/* <Router basename="/">
+              <Switch>
+                <Route path="/timer">
+
+                </Route>
+              </Switch>
+            </Router> */}
+            <Container className='Container' maxWidth='md'>
+              <SignDialog />
             </Container>
           </ThemeProvider>
       </React.Fragment>
