@@ -2,6 +2,7 @@ import * as actionType from '../actionTypes/actionTypes';
 
 const initalState = {
     openSignDialog: true,
+    users: [],
 }
 
 const reducers = (state = initalState, action) => {

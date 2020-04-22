@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { setOpenSignDialog } from '../../actions/SignDialog';
 
 // Components
-// import Signin from '../Signin/Signin';
+import Signin from '../Signin/Signin';
 // import Signup from '../Signup/Signup';
 
 // Material UI Components
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const SignDialog = ( {openSignDialog} ) => {
+const SignDialog = ( {openSignDialog, setOpenSignDialog, users} ) => {
     const Style = useStyles();
 
     const [currentPage, setCurrentPage] = useState('in');
@@ -28,7 +28,7 @@ const SignDialog = ( {openSignDialog} ) => {
     const [signUpAnimation, setSignUpAnimation] = useState(false);
 
     // This method will set the dialog content depending on the currentPage state or close the dialog
-    const handleDialog = (type) => {
+    const handleClickDialog = (type) => {
         switch(type){
             case "in":
                 setSignUpAnimation(false);
@@ -59,6 +59,9 @@ const SignDialog = ( {openSignDialog} ) => {
         }
     }
 
+    const handleUpdateState = (users, user) => {
+    }
+
     return (
         <Dialog
             className={Style.Dialog}
@@ -79,13 +82,13 @@ const SignDialog = ( {openSignDialog} ) => {
                             : <span className={signUpAnimation === true ? 'animated fadeIn' : 'animated fadeOut'}>Sign up</span>
                 }
             </DialogTitle>
-            {/* <DialogContent>
+            <DialogContent>
                 {
                     currentPage === "in"
-                        ? <div className={signInAnimation === true ? 'animated fadeIn' : 'animated fadeOut'}><Signin users={users} handleDialog={handleDialog} handleUpdateState={handleUpdateState} /></div>
-                            : <div className={signUpAnimation === true ? 'animated fadeIn' : 'animated fadeOut'}><Signup users={users} handleDialog={handleDialog} handleUpdateState={handleUpdateState} /></div>
+                        ? <div className={signInAnimation === true ? 'animated fadeIn' : 'animated fadeOut'}><Signin users={users} handleClickDialog={handleClickDialog} handleUpdateState={handleUpdateState} /></div>
+                            : null/*<div className={signUpAnimation === true ? 'animated fadeIn' : 'animated fadeOut'}><Signup users={users} handleClickDialog={handleClickDialog} handleUpdateState={handleUpdateState} /></div>*/
                 }
-            </DialogContent> */}
+            </DialogContent>
         </Dialog>
     )
 }
@@ -93,7 +96,8 @@ const SignDialog = ( {openSignDialog} ) => {
 // Fetching state from store
 const mapStateToProps = (state) => {
     return{
-        openSignDialog: state.openSignDialog
+        openSignDialog: state.openSignDialog,
+        users: state.users
     };
 };
 
