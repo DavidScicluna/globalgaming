@@ -130,7 +130,7 @@ export default function Signin( {users, handleClickDialog, handleUpdateState} ) 
                         handleUpdateState(currentUsers, item);
                         setTimeout(() => {
                             handleClickDialog('correct');
-                        }, 1000);
+                        }, 500);
                     }else{
                         setError(true);
                     }
@@ -149,7 +149,7 @@ export default function Signin( {users, handleClickDialog, handleUpdateState} ) 
             handleUpdateState(currentUsers, newUser);
             setTimeout(() => {
                 handleClickDialog('correct');
-            }, 1000);
+            }, 500);
         }
     }
 

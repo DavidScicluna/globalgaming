@@ -117,7 +117,7 @@ export default function Signup( {users, handleClickDialog, handleUpdateState} ) 
             handleUpdateState(currentUsers, newUser);
             setTimeout(() => {
                 handleClickDialog('correct');
-            }, 1000);
+            }, 500);
         }
     }
 
