@@ -33,6 +33,11 @@ const ListItems = ({Signout}) => {
         <React.Fragment>
             <ListItem button>
                 <ListItemText
+                    primary="Your Likes"
+                />
+            </ListItem>
+            <ListItem button>
+                <ListItemText
                     primary="Your Watchlist"
                 />
             </ListItem>

@@ -22,6 +22,9 @@ const theme = createMuiTheme({
       main: '#27AE60',
     }
   },
+  typography: {
+    fontFamily: "'Work Sans', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'",
+  },
 });
 
 export default class App extends React.Component{

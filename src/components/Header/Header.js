@@ -6,7 +6,8 @@ import { connect } from 'react-redux';
 // import * as actions from '../../actions/SignDialog';
 
 // Components
-import AccountMenu from '../AccountMenu/AccountMenu'
+import Menu from '../Menu/Menu';
+import AccountMenu from '../AccountMenu/AccountMenu';
 
 // Material UI Components
 import { makeStyles, Paper, Toolbar, Hidden, IconButton, Box, Fade, Button, Icon} from '@material-ui/core';
@@ -50,12 +51,24 @@ const useStyles = makeStyles((theme) => ({
 const Header = ( {openSignDialog, users, user} ) => {
     const Style = useStyles();
 
+    // Menu Drawer State
+    const [openDrawer, setOpenDrawer] = React.useState(false);
+
     // Account Menu Popover State
     const [anchorEl, setAnchorEl] = useState(null);
     const [openPopper, setOpenPopper] = useState(false);
 
     const popperID = openPopper ? 'Account Menu' : undefined;
 
+    // Menu Drawer Methods
+    const handleClickOpenDrawer = (event) => {
+        event.preventDefault();
+        setOpenDrawer(true);
+    };
+
+    const handleCloseDrawer = () => {
+        setOpenDrawer(false);
+    };
 
     // Account Menu Popover Methods
     const handleClickOpenPopover = (event) => {
@@ -74,7 +87,7 @@ const Header = ( {openSignDialog, users, user} ) => {
             <Paper elevation={0} >
                 <Toolbar disableGutters>
                     <Hidden smUp>
-                        <IconButton aria-label="Menu" className={Style.Button} disableRipple edge="start">
+                        <IconButton aria-label="Menu" className={(openDrawer === true) ? Style.ButtonActive : Style.Button} disableRipple edge="start" onClick={(event) => handleClickOpenDrawer(event)}>
                             <MenuRoundedIcon />
                         </IconButton>
                         <Box style={{flex: 1}} />
@@ -87,7 +100,7 @@ const Header = ( {openSignDialog, users, user} ) => {
                         </IconButton>
                     </Hidden>
                     <Hidden xsDown>
-                        <Button className={Style.Button} disableRipple>
+                        <Button className={(openDrawer === true) ? Style.ButtonActive : Style.Button} disableRipple onClick={(event) => handleClickOpenDrawer(event)}>
                             <div className={Style.ButtonContent}>
                                 <MenuRoundedIcon />
                                 <Box mr={0.75} />
@@ -115,6 +128,7 @@ const Header = ( {openSignDialog, users, user} ) => {
                     </Hidden>
                 </Toolbar>            
             </Paper>
+            <Menu openDrawer={openDrawer} user={user} handleCloseDrawer={handleCloseDrawer} />
             <AccountMenu anchorEl={anchorEl} openPopper={openPopper} popperID={popperID} user={user} handleClosePopover={handleClosePopover} />
         </React.Fragment>
     )
