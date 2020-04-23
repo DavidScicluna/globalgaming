@@ -115,26 +115,41 @@ export default function Signin( {users, handleClickDialog, handleUpdateState} ) 
     const handleClickSignin = (event, type) => {
         event.preventDefault();
 
-        console.log(type)
+        const currentUsers = [...users];
 
         if(type === 'user'){
-            const currentUsers = [...users];
-            let userCorrect = false;
+            if(currentUsers.length === 0){
+                setError(true);
+            }else{
+                let userCorrect = false;
 
-            currentUsers.forEach(item => {
-                if(username === item.username && password === item.password){
-                    setError(false);
-                    userCorrect = true;
-                    handleUpdateState(currentUsers, item);
-                    setTimeout(() => {
-                        handleClickDialog('correct');
-                    }, 1000);
-                }else if(userCorrect === false){
-                    setError(true);
-                }
-            });
+                currentUsers.forEach(item => {
+                    if(username === item.username && password === item.password){
+                        setError(false);
+                        userCorrect = true;
+                        handleUpdateState(currentUsers, item);
+                        setTimeout(() => {
+                            handleClickDialog('correct');
+                        }, 1000);
+                    }else{
+                        setError(true);
+                    }
+                });
+            }
         }else{
+            const newUser = {
+                id: Math.random(),
+                username: 'Guest',
+                password: '',
+                access: 'guest',
+                initials: 'G',
+                color: '#757575',
+            }
 
+            handleUpdateState(currentUsers, newUser);
+            setTimeout(() => {
+                handleClickDialog('correct');
+            }, 1000);
         }
     }
 

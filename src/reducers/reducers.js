@@ -12,13 +12,10 @@ const initalState = {
 const reducers = (state = initalState, action) => {
     switch(action.type){
         case actionType.SET_OPENSIGNDIALOG:
-            console.log(action)
-            return {...state, openSignDialog: action.payload }
+            return Object.assign({}, state, {openSignDialog: action.payload})
         case actionType.SET_USERS:
-            console.log(action)
             return Object.assign({}, state, {users: action.payload})
         case actionType.SET_USER:
-            console.log(action)
             return Object.assign({}, state, {user: action.payload})
         default:
             return state;

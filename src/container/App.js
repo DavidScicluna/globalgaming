@@ -45,7 +45,7 @@ export default class App extends React.Component{
               <Switch>
                 <Route exact path="/">
                   <SignDialog />
-                  <Container className='Container' maxWidth='md'>
+                  <Container className='Container' maxWidth='md' disableGutters>
                     <Header />
                   </Container>
                 </Route>

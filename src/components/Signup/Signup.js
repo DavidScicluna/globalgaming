@@ -3,6 +3,9 @@ import React, {useState} from 'react';
 // Material UI Components
 import { makeStyles, Grid, FormControl, TextField, Button} from '@material-ui/core';
 
+// JSON Web Token
+import jwt from 'jsonwebtoken';
+
 // Material UI Custom Component Style
 const useStyles = makeStyles((theme) => ({
     FormControl: {
@@ -98,11 +101,13 @@ export default function Signup( {users, handleClickDialog, handleUpdateState} ) 
         }else {
             const newUsername = username.split('');
             const initial = newUsername[0].replace(/^\w/, letter => letter.toUpperCase());
+            const token = jwt.sign({username: username, password: password}, 'secret');
 
             const newUser = {
-                id: Math.random(),
+                id: token,
                 username: username,
                 password: password,
+                access: 'user',
                 initials: initial,
                 color: colors[Math.floor(Math.random() * colors.length)],
             }
