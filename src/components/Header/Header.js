@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { connect } from 'react-redux';
-// import { bindActionCreators } from 'redux';
+import { bindActionCreators } from 'redux';
 
 // Actions
-// import * as actions from '../../actions/SignDialog';
+import * as actions from '../../actions/Api';
+import fetchApi from '../../fetchApi'
 
 // Components
 import Menu from '../Menu/Menu';
@@ -48,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const Header = ( {openSignDialog, users, user} ) => {
+const Header = ( {openSignDialog, users, user, fetchApiMovieGenres} ) => {
     const Style = useStyles();
 
     // Menu Drawer State
@@ -59,6 +60,17 @@ const Header = ( {openSignDialog, users, user} ) => {
     const [openPopper, setOpenPopper] = useState(false);
 
     const popperID = openPopper ? 'Account Menu' : undefined;
+
+    // Get movie genres
+    useEffect(() => {
+        fetchApi(
+            'https://api.themoviedb.org/3/genre/movie/list?api_key=c287015949cec13fb17a26e50b4f054a&language=en-US',
+            fetchApiMovieGenres
+        )
+        return () => {
+            return 
+        }
+    }, [fetchApiMovieGenres])
 
     // Menu Drawer Methods
     const handleClickOpenDrawer = (event) => {
@@ -137,19 +149,19 @@ const Header = ( {openSignDialog, users, user} ) => {
 // Fetching state from store
 const mapStateToProps = (state) => {
     return{
-        openSignDialog: state.openSignDialog,
-        users: state.users,
-        user: state.user,
+        openSignDialog: state.data.openSignDialog,
+        users: state.data.users,
+        user: state.data.user,
+        movieGenres: state.api.movies.genres,
     };
 };
 
 // Sending some data to an action
-// const matchDispatchToProps = (dispatch) => {
-//     return bindActionCreators({
-//         setOpenSignDialog: actions.setOpenSignDialog,
-//         setUsers: actions.setUsers,
-//         setUser: actions.setUser
-//     }, dispatch);
-// }
+const matchDispatchToProps = (dispatch) => {
+    return bindActionCreators({
+        fetchApiMovieGenres: actions.fetchApiMovieGenres,
+        fetchApiError: actions.fetchApiError,
+    }, dispatch);
+}
 
-export default connect(mapStateToProps)(Header);
+export default connect(mapStateToProps, matchDispatchToProps)(Header);

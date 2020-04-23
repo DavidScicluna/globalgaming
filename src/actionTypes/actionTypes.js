@@ -1,3 +1,8 @@
+// SignDialog
 export const SET_OPENSIGNDIALOG = 'SET_OPENSIGNDIALOG';
 export const SET_USERS = 'SET_USERS';
 export const SET_USER = 'SET_USER';
+
+// API
+export const FETCH_API_MOVIE_GENRES = 'FETCH_API_MOVIE_GENRES';
+export const FETCH_API_ERROR = 'FETCH_API_ERROR';

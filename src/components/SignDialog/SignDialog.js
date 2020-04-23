@@ -104,8 +104,8 @@ const SignDialog = ( {openSignDialog, users, setOpenSignDialog, setUsers, setUse
 // Fetching state from store
 const mapStateToProps = (state) => {
     return{
-        openSignDialog: state.openSignDialog,
-        users: state.users
+        openSignDialog: state.data.openSignDialog,
+        users: state.data.users
     };
 };
 

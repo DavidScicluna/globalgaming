@@ -56,11 +56,16 @@ const useStyles = makeStyles((theme) => ({
     Or: {
         textAlign: 'center'
     },
+    Guest:{
+        background: theme.palette.action.hover,
+        color: theme.palette.text.primary
+    },
     Popover: {
         zIndex: [[10000], '!important']
     },
     Paper: {
-        background: theme.palette.warning.main,
+        background: theme.palette.action.hover,
+        color: theme.palette.warning.main,
         margin: theme.spacing(2, 6),
         padding: theme.spacing(2),
     },
@@ -253,8 +258,8 @@ export default function Signin( {users, handleClickDialog, handleUpdateState} ) 
                     <Button 
                         aria-owns={guestPopperOpen ? 'guestPopper' : undefined}
                         aria-haspopup="true"
-                        className={Style.Button} 
-                        color="default"
+                        className={`${Style.Button} ${Style.Guest}`} 
+                        // color="default"
                         disableRipple 
                         fullWidth 
                         size="large" 

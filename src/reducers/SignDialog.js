@@ -3,23 +3,32 @@ import * as actionType from '../actionTypes/actionTypes';
 const getUsers = JSON.parse(localStorage.getItem("users") || "[]");
 const getUser = JSON.parse(localStorage.getItem("users") || "{}");
 
-const initalState = {
+const initialState = {
     openSignDialog: true,
     users: getUsers,
     user: getUser
 }
 
-const reducers = (state = initalState, action) => {
+const signDialogReducer = (state = initialState, action) => {
     switch(action.type){
         case actionType.SET_OPENSIGNDIALOG:
-            return Object.assign({}, state, {openSignDialog: action.payload})
+            return {
+                ...state,
+                openSignDialog: action.payload
+            }
         case actionType.SET_USERS:
-            return Object.assign({}, state, {users: action.payload})
+            return {
+                ...state,
+                users: action.payload
+            } 
         case actionType.SET_USER:
-            return Object.assign({}, state, {user: action.payload})
+            return {
+                ...state,
+                user: action.payload
+            } 
         default:
             return state;
     }
 }
 
-export default reducers;
+export default signDialogReducer;

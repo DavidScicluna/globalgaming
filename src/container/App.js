@@ -12,14 +12,38 @@ import { CssBaseline, createMuiTheme, ThemeProvider, Container, Box } from '@mat
 // Material UI Custom Theme
 const theme = createMuiTheme({
   palette: {
+    common: {
+      black: '#212121',
+      white: '#FAFAFA',
+    },
+    type: 'light',
     primary: {
-      main: '#2980B9',
+      main: '#1289A7',
     },
     secondary: {
       main: '#C0392B'
     },
+    error: {
+      main: '#EA2027',
+    },
+    warning: {
+      main: '#FFC312',
+    },
+    info: {
+      main: '#1289A7',
+    },
     success: {
-      main: '#27AE60',
+      main: '#009432',
+    },
+    contrastThreshold: 2,
+    text: {
+      primary: 'rgba(0, 0, 0, 0.87)',
+      secondary: 'rgba(0, 0, 0, 0.64)',
+      disabled: 'rgba(0, 0, 0, 0.38)',
+      hint: 'rgba(0, 0, 0, 0.54)',
+    },
+    action: {
+      hover: 'rgba(0, 0, 0, 0.10)',
     }
   },
   typography: {
