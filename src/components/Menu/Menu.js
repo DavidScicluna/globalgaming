@@ -6,22 +6,36 @@ import { connect } from 'react-redux';
 // import * as actions from '../../actions/SignDialog';
 
 // Material UI Components
-import { makeStyles, Box, Drawer, Grid, Hidden, IconButton, Button, List, ListItem, ListItemIcon, ListItemText, Collapse} from '@material-ui/core';
+import { makeStyles, Box, Drawer, Grid, Hidden, IconButton, Button, List, ListItem, ListItemText, Collapse, Divider, ButtonGroup} from '@material-ui/core';
 
 // Icons
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
-import TheatersRoundedIcon from '@material-ui/icons/TheatersRounded';
 import ArrowDropDownRoundedIcon from '@material-ui/icons/ArrowDropDownRounded';
+import TheatersOutlinedIcon from '@material-ui/icons/TheatersOutlined';
+import TvOutlinedIcon from '@material-ui/icons/TvOutlined';
+import FavoriteBorderOutlinedIcon from '@material-ui/icons/FavoriteBorderOutlined';
+import HourglassEmptyOutlinedIcon from '@material-ui/icons/HourglassEmptyOutlined';
+import StarBorderOutlinedIcon from '@material-ui/icons/StarBorderOutlined';
+import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
+import ColorLensOutlinedIcon from '@material-ui/icons/ColorLensOutlined';
 
 // Material UI Custom Component Style
 const useStyles = makeStyles((theme) => ({
+    Drawer: {
+        minWidth: '250px'
+    },
     Button : {
+        borderRadius: theme.shape.borderRadius,
         color: theme.palette.text.hint,
-        transition: '0.5s ease-in-out',
+        transition: '0.4s ease-in-out',
         '&:hover': {
             background: theme.palette.action.hover,
             color: theme.palette.text.primary
         }
+    },
+    ButtonActive : {
+        background: theme.palette.action.hover,
+        color: theme.palette.text.primary,
     },
     ButtonContent: {
         display: 'flex',
@@ -31,24 +45,89 @@ const useStyles = makeStyles((theme) => ({
     IconActive : {
         color: theme.palette.text.primary,
         transform: 'rotate(180deg)',
-        transition: 'transform 0.5s ease-in-out',
+        transition: 'transform 0.4s ease-in-out',
     },
     IconInactive : {
         transform: 'rotate(360deg)',
-        transition: 'transform 0.5s ease-in-out',
+        transition: 'transform 0.4s ease-in-out',
     },
     Nested: {
-        paddingLeft: theme.spacing(6),
+        margin: theme.spacing(1, 0),
+        paddingLeft: theme.spacing(4),
     },
+    Header: {
+        '& span': {
+            fontSize: [[theme.typography.h6.fontSize], '!important'],
+            fontWeight: [[theme.typography.fontWeightMedium], '!important'],
+            textTransform: 'uppercase',
+        }
+    },
+    Divider: {
+        margin: theme.spacing(2, 0),
+    },
+    MarginRight: {
+        marginRight: theme.spacing(1),
+    }
 }));
 
 export default function Menu( {openDrawer, user, handleCloseDrawer} ) {
     const Style = useStyles();
 
-    const [openMovies, setOpenMovies] = React.useState(false);
+    const [openMovies, setOpenMovies] = React.useState(true);
+    const [openTV, setOpenTV] = React.useState(false);
+
+    const movieTypes = [
+        {
+            id: Math.random(),
+            title:'Now Playing',
+            method: null
+        }, 
+        {
+            id: Math.random(),
+            title:'Most Popular',
+            method: null
+        },
+        {
+            id: Math.random(),
+            title:'Top Rated',
+            method: null
+        },
+        {
+            id: Math.random(),
+            title:'Upcoming',
+            method: null
+        },
+    ];
+
+    const tvTypes = [
+        {
+            id: Math.random(),
+            title:'Airing Today',
+            method: null
+        }, 
+        {
+            id: Math.random(),
+            title:'Showing Now On TV',
+            method: null
+        },
+        {
+            id: Math.random(),
+            title:'Most Popular',
+            method: null
+        },
+        {
+            id: Math.random(),
+            title:'Top Rated',
+            method: null
+        },
+    ];
 
     const handleClickMovies = () => {
         setOpenMovies(!openMovies);
+    };
+    
+    const handleClickTV = () => {
+        setOpenTV(!openTV);
     };
 
     return (
@@ -58,9 +137,9 @@ export default function Menu( {openDrawer, user, handleCloseDrawer} ) {
             open={openDrawer}
             onClose={handleCloseDrawer}
             transitionDuration={750}
-            variant="persistent"
+            // variant="persistent"
         >
-            <Box p={2 }>
+            <Box p={2} className={Style.Drawer}>
                 <Grid container direction="column" spacing={2}>
                     <Grid item>
                         <Hidden smUp>
@@ -72,41 +151,78 @@ export default function Menu( {openDrawer, user, handleCloseDrawer} ) {
                             <Button className={Style.Button} disableRipple onClick={handleCloseDrawer}>
                                 <div className={Style.ButtonContent}>
                                     <CloseRoundedIcon />
-                                    <Box mr={0.75} />
                                     <span>Close</span>
                                 </div>
                             </Button>
                         </Hidden>
                     </Grid>
-                    {/* <Grid item container direction="column" alignItems="center">
-                        <Avatar
-                            alt={`${user.username} Image`}
-                            className={Style.Avatar}
-                            style={{backgroundColor: user.color}}
-                            variant="rounded"
-                        >
-                            {user.initials}
-                        </Avatar>
-                        <Typography align="center" variant="h6">
-                            {user.username}
-                        </Typography>
-                    </Grid> */}
                     <Grid item>
                         <List>
-                            <ListItem button onClick={handleClickMovies}>
-                                <TheatersRoundedIcon />
-                                <Box mx={1} />
+                            <ListItem className={openMovies === true ? `${Style.Header} ${Style.ButtonActive}` : `${Style.Header} ${Style.Button}`} button onClick={handleClickMovies}>
+                                <TheatersOutlinedIcon className={Style.MarginRight} />
                                 <ListItemText primary="Movies" />
-                                <Box mx={4} />
+                                <Box style={{flex: 1}} />
                                 <ArrowDropDownRoundedIcon className={(openMovies === true) ? Style.IconActive : Style.IconInactive} />
                             </ListItem>
                             <Collapse in={openMovies} timeout={750} unmountOnExit>
-                                <List component="div" disablePadding>
-                                    <ListItem button className={Style.Nested}>
-                                        <ListItemText primary="Starred" />
-                                    </ListItem>
+                                <List disablePadding>
+                                    {
+                                        movieTypes.map(item => {
+                                            return(
+                                                <ListItem key={item.id} button className={`${Style.Nested} ${Style.Button}`} onClick={item.method}>
+                                                    <ListItemText primary={item.title} />
+                                                </ListItem>
+                                            );
+                                        })
+                                    }
                                 </List>
                             </Collapse>
+
+                            <ListItem className={openTV === true ? `${Style.Header} ${Style.ButtonActive}` : `${Style.Header} ${Style.Button}`} button onClick={handleClickTV}>
+                                <TvOutlinedIcon className={Style.MarginRight} />
+                                <ListItemText primary="TV" />
+                                <Box style={{flex: 1}} />
+                                <ArrowDropDownRoundedIcon className={(openTV === true) ? Style.IconActive : Style.IconInactive} />
+                            </ListItem>
+                            <Collapse in={openTV} timeout={750} unmountOnExit>
+                                <List disablePadding>
+                                    {
+                                        tvTypes.map(item => {
+                                            return(
+                                                <ListItem key={item.id} button className={`${Style.Nested} ${Style.Button}`} onClick={item.method}>
+                                                    <ListItemText primary={item.title} />
+                                                </ListItem>
+                                            );
+                                        })
+                                    }
+                                </List>
+                            </Collapse>
+
+                            <Divider className={Style.Divider} variant="inset" />
+
+                            <ListItem className={`${Style.Header} ${Style.Button}`}>
+                                <FavoriteBorderOutlinedIcon className={Style.MarginRight} />
+                                <ListItemText primary="Liked" />
+                            </ListItem>
+                            <ListItem className={`${Style.Header} ${Style.Button}`}>
+                                <HourglassEmptyOutlinedIcon className={Style.MarginRight} />
+                                <ListItemText primary="Watchlist" />
+                            </ListItem>
+                            <ListItem className={`${Style.Header} ${Style.Button}`}>
+                                <StarBorderOutlinedIcon className={Style.MarginRight} />
+                                <ListItemText primary="Ratings" />
+                            </ListItem>
+
+                            <Divider className={Style.Divider} variant="inset" />
+
+                            <ListItem className={`${Style.Header} ${Style.Button}`}>
+                                <SettingsOutlinedIcon className={Style.MarginRight} />
+                                <ListItemText primary="Settings " />
+                            </ListItem>
+                            <ListItem className={`${Style.Header} ${Style.Button}`}>
+                                <ColorLensOutlinedIcon className={Style.MarginRight} />
+                                <ListItemText primary="Customize" />
+                            </ListItem>
                         </List>
                     </Grid>
                 </Grid>

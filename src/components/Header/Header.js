@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+// import { bindActionCreators } from 'redux';
 
-// Actions
-import * as actions from '../../actions/Api';
-import fetchApi from '../../fetchApi'
+// // Actions
+// import * as actions from '../../actions/Api';
+// import fetchApi from '../../fetchApi'
 
 // Components
 import Menu from '../Menu/Menu';
@@ -23,7 +23,7 @@ import ArrowDropDownRoundedIcon from '@material-ui/icons/ArrowDropDownRounded';
 const useStyles = makeStyles((theme) => ({
     Button : {
         color: theme.palette.text.hint,
-        transition: '0.5s ease-in-out',
+        transition: '0.4s ease-in-out',
         '&:hover': {
             background: theme.palette.action.hover,
             color: theme.palette.text.primary
@@ -36,11 +36,11 @@ const useStyles = makeStyles((theme) => ({
     IconActive : {
         color: theme.palette.text.primary,
         transform: 'rotate(180deg)',
-        transition: 'transform 0.5s ease-in-out',
+        transition: 'transform 0.4s ease-in-out',
     },
     IconInactive : {
         transform: 'rotate(360deg)',
-        transition: 'transform 0.5s ease-in-out',
+        transition: 'transform 0.4s ease-in-out',
     },
     ButtonContent: {
         display: 'flex',
@@ -62,15 +62,15 @@ const Header = ( {openSignDialog, users, user, fetchApiMovieGenres} ) => {
     const popperID = openPopper ? 'Account Menu' : undefined;
 
     // Get movie genres
-    useEffect(() => {
-        fetchApi(
-            'https://api.themoviedb.org/3/genre/movie/list?api_key=c287015949cec13fb17a26e50b4f054a&language=en-US',
-            fetchApiMovieGenres
-        )
-        return () => {
-            return 
-        }
-    }, [fetchApiMovieGenres])
+    // useEffect(() => {
+    //     fetchApi(
+    //         'https://api.themoviedb.org/3/genre/movie/list?api_key=c287015949cec13fb17a26e50b4f054a&language=en-US',
+    //         fetchApiMovieGenres
+    //     )
+    //     return () => {
+    //         return 
+    //     }
+    // }, [fetchApiMovieGenres])
 
     // Menu Drawer Methods
     const handleClickOpenDrawer = (event) => {
@@ -157,11 +157,11 @@ const mapStateToProps = (state) => {
 };
 
 // Sending some data to an action
-const matchDispatchToProps = (dispatch) => {
-    return bindActionCreators({
-        fetchApiMovieGenres: actions.fetchApiMovieGenres,
-        fetchApiError: actions.fetchApiError,
-    }, dispatch);
-}
+// const matchDispatchToProps = (dispatch) => {
+//     return bindActionCreators({
+//         fetchApiMovieGenres: actions.fetchApiMovieGenres,
+//         fetchApiError: actions.fetchApiError,
+//     }, dispatch);
+// }
 
-export default connect(mapStateToProps, matchDispatchToProps)(Header);
+export default connect(mapStateToProps)(Header);

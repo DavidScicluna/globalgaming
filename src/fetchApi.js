@@ -7,8 +7,8 @@ const fetchApiData = (link, action) => {
     fetch(link)
     .then(response => response.json())
     .then(json => {
-        if(json.error) {
-            throw(json.error);
+        if(json.status_message) {
+            throw(json.status_message);
         } else {
             action(json);
         }
