@@ -1,8 +1,10 @@
-// SignDialog
+// Internal State (APP)
 export const SET_OPENSIGNDIALOG = 'SET_OPENSIGNDIALOG';
+export const SET_OPENSEARCHDIALOG = 'SET_OPENSEARCHDIALOG';
 export const SET_USERS = 'SET_USERS';
 export const SET_USER = 'SET_USER';
 
+// External State (API)
 // API Movies
 export const FETCH_API_MOVIE_NOWPLAYING = 'FETCH_API_MOVIE_NOWPLAYING';
 export const FETCH_API_MOVIE_POPULAR = 'FETCH_API_MOVIE_POPULAR';

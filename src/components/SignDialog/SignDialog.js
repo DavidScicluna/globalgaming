@@ -3,25 +3,29 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 // Actions
-import * as actions from '../../actions/SignDialog';
+import * as appActions from '../../actions/AppAction';
 
 // Components
 import Signin from '../Signin/Signin';
 import Signup from '../Signup/Signup';
 
 // Material UI Components
-import { makeStyles, Dialog, DialogTitle, DialogContent, Fade} from '@material-ui/core';
+import { makeStyles, Dialog, DialogTitle, DialogContent, Fade, Grow} from '@material-ui/core';
 
 // Material UI Custom Component Style
 const useStyles = makeStyles((theme) => ({
     Dialog : {
         backdropFilter: 'blur(10px)',
     },
+    DialogContent : {
+        minHeight: '525px',
+        display: 'flex',
+        justifyContent: 'center',
+    },
 }));
 
 const SignDialog = ( {openSignDialog, users, setOpenSignDialog, setUsers, setUser} ) => {
     const Style = useStyles();
-
 
     const [currentPage, setCurrentPage] = useState('in');
 
@@ -86,15 +90,15 @@ const SignDialog = ( {openSignDialog, users, setOpenSignDialog, setUsers, setUse
             <DialogTitle id="SignTitle">
                 {
                     currentPage === "in"
-                        ? <span className={signInAnimation === true ? 'animated fadeIn' : 'animated fadeOut'}>Sign in</span>
-                            : <span className={signUpAnimation === true ? 'animated fadeIn' : 'animated fadeOut'}>Sign up</span>
+                        ? <span className={signInAnimation === true ? 'animated fadeInSign' : 'animated fadeOutSign'}>Sign in</span>
+                            : <span className={signUpAnimation === true ? 'animated fadeInSign' : 'animated fadeOutSign'}>Sign up</span>
                 }
             </DialogTitle>
-            <DialogContent>
+            <DialogContent className={Style.DialogContent}>
                 {
                     currentPage === "in"
-                        ? <div className={signInAnimation === true ? 'animated fadeIn' : 'animated fadeOut'}><Signin users={users} handleClickDialog={handleClickDialog} handleUpdateState={handleUpdateState} /></div>
-                            : <div className={signUpAnimation === true ? 'animated fadeIn' : 'animated fadeOut'}><Signup users={users} handleClickDialog={handleClickDialog} handleUpdateState={handleUpdateState} /></div>
+                        ? <div className={signInAnimation === true ? 'animated fadeInSign' : 'animated fadeOutSign'}><Signin users={users} handleClickDialog={handleClickDialog} handleUpdateState={handleUpdateState} /></div>
+                            : <div className={signUpAnimation === true ? 'animated fadeInSign' : 'animated fadeOutSign'}><Signup users={users} handleClickDialog={handleClickDialog} handleUpdateState={handleUpdateState} /></div>
                 }
             </DialogContent>
         </Dialog>
@@ -104,17 +108,17 @@ const SignDialog = ( {openSignDialog, users, setOpenSignDialog, setUsers, setUse
 // Fetching state from store
 const mapStateToProps = (state) => {
     return{
-        openSignDialog: state.data.openSignDialog,
-        users: state.data.users
+        openSignDialog: state.app.openSignDialog,
+        users: state.app.users
     };
 };
 
 // Sending some data to an action
 const matchDispatchToProps = (dispatch) => {
     return bindActionCreators({
-        setOpenSignDialog: actions.setOpenSignDialog,
-        setUsers: actions.setUsers,
-        setUser: actions.setUser
+        setOpenSignDialog: appActions.setOpenSignDialog,
+        setUsers: appActions.setUsers,
+        setUser: appActions.setUser
     }, dispatch);
 }
 

@@ -1,9 +1,10 @@
 import { combineReducers } from 'redux'
 
 // Reducers
-import signDialogReducer from './SignDialog';
 import ApiRootReducer from './apiRootReducer';
+import AppReducer from './AppReducer';
 
-const rootReducer = combineReducers({api: ApiRootReducer, data: signDialogReducer})
+
+const rootReducer = combineReducers({api: ApiRootReducer, app: AppReducer})
 
 export default rootReducer;

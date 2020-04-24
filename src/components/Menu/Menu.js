@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { connect } from 'react-redux';
-// import { bindActionCreators } from 'redux';
+import { bindActionCreators } from 'redux';
 
 // Actions
-// import * as actions from '../../actions/SignDialog';
+import * as appActions from '../../actions/AppAction';
 
 // Material UI Components
 import { makeStyles, Box, Drawer, Grid, Hidden, IconButton, Button, List, ListItem, ListItemText, Collapse, Divider, ButtonGroup} from '@material-ui/core';
@@ -11,6 +11,7 @@ import { makeStyles, Box, Drawer, Grid, Hidden, IconButton, Button, List, ListIt
 // Icons
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
 import ArrowDropDownRoundedIcon from '@material-ui/icons/ArrowDropDownRounded';
+import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
 import TheatersOutlinedIcon from '@material-ui/icons/TheatersOutlined';
 import TvOutlinedIcon from '@material-ui/icons/TvOutlined';
 import FavoriteBorderOutlinedIcon from '@material-ui/icons/FavoriteBorderOutlined';
@@ -56,6 +57,7 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft: theme.spacing(4),
     },
     Header: {
+        margin: theme.spacing(0.5, 0),
         '& span': {
             fontSize: [[theme.typography.h6.fontSize], '!important'],
             fontWeight: [[theme.typography.fontWeightMedium], '!important'],
@@ -70,11 +72,12 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function Menu( {openDrawer, user, handleCloseDrawer} ) {
+const Menu = ( {openDrawer, user, handleCloseDrawer, setOpenSearchDialog} ) => {
     const Style = useStyles();
 
-    const [openMovies, setOpenMovies] = React.useState(true);
-    const [openTV, setOpenTV] = React.useState(false);
+    // Menu List Items State
+    const [openMovies, setOpenMovies] = useState(true);
+    const [openTV, setOpenTV] = useState(false);
 
     const movieTypes = [
         {
@@ -122,12 +125,19 @@ export default function Menu( {openDrawer, user, handleCloseDrawer} ) {
         },
     ];
 
+    // Menu List Items Methods
     const handleClickMovies = () => {
         setOpenMovies(!openMovies);
     };
     
     const handleClickTV = () => {
         setOpenTV(!openTV);
+    };
+
+    // Search Dialog Methods
+    const handleClickOpenSearchDialog = (event) => {
+        event.preventDefault();
+        setOpenSearchDialog(true);
     };
 
     return (
@@ -142,22 +152,19 @@ export default function Menu( {openDrawer, user, handleCloseDrawer} ) {
             <Box p={2} className={Style.Drawer}>
                 <Grid container direction="column" spacing={2}>
                     <Grid item>
-                        <Hidden smUp>
-                            <IconButton aria-label="Search" className={Style.Button} disableRipple edge="start" onClick={handleCloseDrawer}>
+                        <Button className={Style.Button} disableRipple onClick={handleCloseDrawer}>
+                            <div className={Style.ButtonContent}>
                                 <CloseRoundedIcon />
-                            </IconButton>
-                        </Hidden>
-                        <Hidden xsDown>
-                            <Button className={Style.Button} disableRipple onClick={handleCloseDrawer}>
-                                <div className={Style.ButtonContent}>
-                                    <CloseRoundedIcon />
-                                    <span>Close</span>
-                                </div>
-                            </Button>
-                        </Hidden>
+                                <span>Close</span>
+                            </div>
+                        </Button>
                     </Grid>
                     <Grid item>
                         <List>
+                            <ListItem className={`${Style.Header} ${Style.Button}`} button onClick={(event) => handleClickOpenSearchDialog(event)}>
+                                <SearchOutlinedIcon className={Style.MarginRight} />
+                                <ListItemText primary="Search " />
+                            </ListItem>
                             <ListItem className={openMovies === true ? `${Style.Header} ${Style.ButtonActive}` : `${Style.Header} ${Style.Button}`} button onClick={handleClickMovies}>
                                 <TheatersOutlinedIcon className={Style.MarginRight} />
                                 <ListItemText primary="Movies" />
@@ -230,3 +237,19 @@ export default function Menu( {openDrawer, user, handleCloseDrawer} ) {
         </Drawer>
     )
 }
+
+// Fetching state from store
+const mapStateToProps = (state) => {
+    return{
+        user: state.app.user,
+    };
+};
+
+// Sending some data to an action
+const matchDispatchToProps = (dispatch) => {
+    return bindActionCreators({
+        setOpenSearchDialog: appActions.setOpenSearchDialog,
+    }, dispatch);
+}
+
+export default connect(mapStateToProps, matchDispatchToProps)(Menu);

@@ -40,7 +40,11 @@ body{
   }
 }
 
-.fadeOut {
+.fadeOutSign {
+  animation-name: fadeOut;
+}
+
+.fadeOutHeader {
   animation-name: fadeOut;
 }
 
@@ -55,12 +59,17 @@ body{
   }
 }
 
-.fadeIn {
+.fadeInSign {
   animation-name: fadeIn;
 }
 
+.fadeInHeader {
+  animation-name: fadeIn;
+  animation-delay: 1s;
+}
+
 .animated {
-  animation-duration: 0.75s;
+  animation-duration: 1s;
   animation-fill-mode: both;
   animation-timing-function: ease-in-out;
 }

@@ -1,4 +1,4 @@
-import * as actionType from '../actionTypes/actionTypes';
+import * as actionType from '../../actionTypes/actionTypes';
 
 export const fetchApiError = (error) => {
     return {

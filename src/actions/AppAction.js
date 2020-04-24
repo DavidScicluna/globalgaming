@@ -7,6 +7,13 @@ export const setOpenSignDialog = (bool) => {
     }
 };
 
+export const setOpenSearchDialog = (bool) => {
+    return {
+        type: actionType.SET_OPENSEARCHDIALOG,
+        payload: bool
+    }
+};
+
 export const setUsers = (users) => {
     return {
         type: actionType.SET_USERS,

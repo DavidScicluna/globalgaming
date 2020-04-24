@@ -4,17 +4,23 @@ const getUsers = JSON.parse(localStorage.getItem("users") || "[]");
 const getUser = JSON.parse(localStorage.getItem("users") || "{}");
 
 const initialState = {
-    openSignDialog: true,
+    openSignDialog: false,
+    openSearchDialog: false,
     users: getUsers,
     user: getUser
 }
 
-const signDialogReducer = (state = initialState, action) => {
+const appReducer = (state = initialState, action) => {
     switch(action.type){
         case actionType.SET_OPENSIGNDIALOG:
             return {
                 ...state,
                 openSignDialog: action.payload
+            }
+        case actionType.SET_OPENSEARCHDIALOG:
+            return {
+                ...state,
+                openSearchDialog: action.payload
             }
         case actionType.SET_USERS:
             return {
@@ -31,4 +37,4 @@ const signDialogReducer = (state = initialState, action) => {
     }
 }
 
-export default signDialogReducer;
+export default appReducer;

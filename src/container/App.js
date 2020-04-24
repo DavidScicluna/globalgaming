@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 // Actions
-import * as apiActions from '../actions/Api';
+import * as errorAction from '../actions/apiActions/Error';
 import * as movieActions from '../actions/apiActions/Movies';
 import * as tvActions from '../actions/apiActions/TV';
 import fetchApi from '../fetchApi'
@@ -152,8 +152,10 @@ class App extends React.Component{
               <Switch>
                 <Route exact path="/">
                   <SignDialog />
-                  <Container className='Container' maxWidth='md'>
-                    <Header />
+                  <Container maxWidth='md'>
+                    <Box className={this.props.openSignDialog === true || this.props.openSearchDialog === true ? 'animated fadeOutHeader' : 'animated fadeInHeader'}>
+                      <Header />
+                    </Box>
                   </Container>
                 </Route>
               </Switch>
@@ -167,10 +169,8 @@ class App extends React.Component{
 // Fetching state from store
 const mapStateToProps = (state) => {
   return{
-      // openSignDialog: state.data.openSignDialog,
-      // users: state.data.users,
-      // user: state.data.user,
-      // movieGenres: state.api.movies.genres,
+      openSignDialog: state.app.openSignDialog,
+      openSearchDialog: state.app.openSearchDialog,
   };
 };
 
@@ -189,7 +189,8 @@ const matchDispatchToProps = (dispatch) => {
       fetchApiTVPopular: tvActions.fetchApiTVPopular,
       fetchApiTVTopRated: tvActions.fetchApiTVTopRated,
       fetchApiTVGenres: tvActions.fetchApiTVGenres,
-      fetchApiError: apiActions.fetchApiError,
+      // API Error Actions
+      fetchApiError: errorAction.fetchApiError,
     }, dispatch);
 }
 

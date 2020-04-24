@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import { connect } from 'react-redux';
-// import { bindActionCreators } from 'redux';
+import { bindActionCreators } from 'redux';
 
-// // Actions
-// import * as actions from '../../actions/Api';
-// import fetchApi from '../../fetchApi'
+// Actions
+import * as appActions from '../../actions/AppAction';
 
 // Components
 import Menu from '../Menu/Menu';
+import Search from '../Search/Search';
 import AccountMenu from '../AccountMenu/AccountMenu';
 
 // Material UI Components
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const Header = ( {openSignDialog, users, user, fetchApiMovieGenres} ) => {
+const Header = ( {user, setOpenSignDialog, setOpenSearchDialog} ) => {
     const Style = useStyles();
 
     // Menu Drawer State
@@ -61,35 +61,30 @@ const Header = ( {openSignDialog, users, user, fetchApiMovieGenres} ) => {
 
     const popperID = openPopper ? 'Account Menu' : undefined;
 
-    // Get movie genres
-    // useEffect(() => {
-    //     fetchApi(
-    //         'https://api.themoviedb.org/3/genre/movie/list?api_key=c287015949cec13fb17a26e50b4f054a&language=en-US',
-    //         fetchApiMovieGenres
-    //     )
-    //     return () => {
-    //         return 
-    //     }
-    // }, [fetchApiMovieGenres])
-
     // Menu Drawer Methods
-    const handleClickOpenDrawer = (event) => {
+    const handleClickOpenMenuDrawer = (event) => {
         event.preventDefault();
         setOpenDrawer(true);
     };
 
-    const handleCloseDrawer = () => {
+    const handleCloseMenuDrawer = () => {
         setOpenDrawer(false);
     };
 
+    // Search Dialog Methods
+    const handleClickOpenSearchDialog = (event) => {
+        event.preventDefault();
+        setOpenSearchDialog(true);
+    };
+
     // Account Menu Popover Methods
-    const handleClickOpenPopover = (event) => {
+    const handleClickOpenAccountMenuPopover = (event) => {
         event.preventDefault();
         setAnchorEl(event.currentTarget);
         setOpenPopper(true);
     };
     
-    const handleClosePopover = () => {
+    const handleCloseAccountMenuPopover = () => {
         setAnchorEl(null);
         setOpenPopper(false);
     };
@@ -99,20 +94,20 @@ const Header = ( {openSignDialog, users, user, fetchApiMovieGenres} ) => {
             <Paper elevation={0} >
                 <Toolbar disableGutters>
                     <Hidden smUp>
-                        <IconButton aria-label="Menu" className={(openDrawer === true) ? Style.ButtonActive : Style.Button} disableRipple edge="start" onClick={(event) => handleClickOpenDrawer(event)}>
+                        <IconButton aria-label="Menu" className={(openDrawer === true) ? Style.ButtonActive : Style.Button} disableRipple edge="start" onClick={(event) => handleClickOpenMenuDrawer(event)}>
                             <MenuRoundedIcon />
                         </IconButton>
                         <Box style={{flex: 1}} />
-                        <IconButton aria-label="Search" className={Style.Button} disableRipple edge="start">
+                        <IconButton aria-label="Search" className={Style.Button} disableRipple edge="start" onClick={(event) => handleClickOpenSearchDialog(event)}>
                             <SearchRoundedIcon />
                         </IconButton>
-                        <IconButton aria-label="Account Menu" className={(openPopper === true) ? Style.ButtonActive : Style.Button} disableRipple edge="end" onClick={(event) => handleClickOpenPopover(event)}>
+                        <IconButton aria-label="Account Menu" className={(openPopper === true) ? Style.ButtonActive : Style.Button} disableRipple edge="end" onClick={(event) => handleClickOpenAccountMenuPopover(event)}>
                             <FaceRoundedIcon />
                             <ArrowDropDownRoundedIcon className={(openPopper === true) ? Style.IconActive : Style.IconInactive} />
                         </IconButton>
                     </Hidden>
                     <Hidden xsDown>
-                        <Button className={(openDrawer === true) ? Style.ButtonActive : Style.Button} disableRipple onClick={(event) => handleClickOpenDrawer(event)}>
+                        <Button className={(openDrawer === true) ? Style.ButtonActive : Style.Button} disableRipple onClick={(event) => handleClickOpenMenuDrawer(event)}>
                             <div className={Style.ButtonContent}>
                                 <MenuRoundedIcon />
                                 <Box mr={0.75} />
@@ -120,7 +115,7 @@ const Header = ( {openSignDialog, users, user, fetchApiMovieGenres} ) => {
                             </div>
                         </Button>
                         <Box style={{flex: 1}} />
-                        <Button className={Style.Button} disableRipple>
+                        <Button className={Style.Button} disableRipple onClick={(event) => handleClickOpenSearchDialog(event)}>
                             <div className={Style.ButtonContent}>
                                 <SearchRoundedIcon />
                                 <Box mr={0.75} />
@@ -128,7 +123,7 @@ const Header = ( {openSignDialog, users, user, fetchApiMovieGenres} ) => {
                             </div>
                         </Button>
                         <Box mx={0.75} />
-                        <Button aria-describedby={popperID} className={(openPopper === true) ? Style.ButtonActive : Style.Button} disableRipple onClick={(event) => handleClickOpenPopover(event)}>
+                        <Button aria-describedby={popperID} className={(openPopper === true) ? Style.ButtonActive : Style.Button} disableRipple onClick={(event) => handleClickOpenAccountMenuPopover(event)}>
                             <div className={Style.ButtonContent}>
                                 <FaceRoundedIcon />
                                 <Box ml={0.75} mr={0.25}>
@@ -140,8 +135,9 @@ const Header = ( {openSignDialog, users, user, fetchApiMovieGenres} ) => {
                     </Hidden>
                 </Toolbar>            
             </Paper>
-            <Menu openDrawer={openDrawer} user={user} handleCloseDrawer={handleCloseDrawer} />
-            <AccountMenu anchorEl={anchorEl} openPopper={openPopper} popperID={popperID} user={user} handleClosePopover={handleClosePopover} />
+            <Menu openDrawer={openDrawer} user={user} handleCloseDrawer={handleCloseMenuDrawer} />
+            <Search />
+            <AccountMenu anchorEl={anchorEl} openPopper={openPopper} popperID={popperID} user={user} handleClosePopover={handleCloseAccountMenuPopover} />
         </React.Fragment>
     )
 }
@@ -149,19 +145,16 @@ const Header = ( {openSignDialog, users, user, fetchApiMovieGenres} ) => {
 // Fetching state from store
 const mapStateToProps = (state) => {
     return{
-        openSignDialog: state.data.openSignDialog,
-        users: state.data.users,
-        user: state.data.user,
-        movieGenres: state.api.movies.genres,
+        user: state.app.user,
     };
 };
 
 // Sending some data to an action
-// const matchDispatchToProps = (dispatch) => {
-//     return bindActionCreators({
-//         fetchApiMovieGenres: actions.fetchApiMovieGenres,
-//         fetchApiError: actions.fetchApiError,
-//     }, dispatch);
-// }
+const matchDispatchToProps = (dispatch) => {
+    return bindActionCreators({
+        setOpenSignDialog: appActions.setOpenSignDialog,
+        setOpenSearchDialog: appActions.setOpenSearchDialog,
+    }, dispatch);
+}
 
-export default connect(mapStateToProps)(Header);
+export default connect(mapStateToProps, matchDispatchToProps)(Header);
