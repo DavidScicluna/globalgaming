@@ -14,19 +14,13 @@ import fetchApi from '../../fetchApi'
 // import * as appActions from '../../actions/AppAction';
 
 // Components
+import RenderDataListItem from '../RenderDataListItem/RenderDataListItem'
 
 // Material UI Components
-import { makeStyles, Grid, Card, CardActionArea, CardMedia, TextField, Button, CardContent, CardActions, IconButton, Typography, MenuItem, Hidden} from '@material-ui/core';
-
-// Animate on Scroll Library
-import ScrollAnimation from 'react-animate-on-scroll';
+import { makeStyles, Grid, TextField, Button, Typography, MenuItem } from '@material-ui/core';
 
 // Icons
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
-import StarRoundedIcon from '@material-ui/icons/StarRounded';
-import FavoriteBorderRoundedIcon from '@material-ui/icons/FavoriteBorderRounded';
-import FavoriteRoundedIcon from '@material-ui/icons/FavoriteRounded';
-import AddRoundedIcon from '@material-ui/icons/AddRounded';
 
 // Material UI Custom Component Style
 const useStyles = makeStyles((theme) => ({
@@ -42,40 +36,12 @@ const useStyles = makeStyles((theme) => ({
             color: theme.palette.text.primary
         }
     },
-    Poster: {
-        width: '100%',
-        borderRadius: theme.shape.borderRadius,
-    },
-    Rating: {
-        display: 'flex',
-        alignItems: 'center',
-        lineHeight: 'normal',
-        '& svg': {
-            color: theme.palette.warning.main,
-        }
-    },
     SortButton: {
         boxShadow: 'none',
         borderRadius: '25px',
         
         '&:hover': {
             boxShadow: 'none',
-        }
-    },
-    LikeButton: {
-        borderRadius: theme.shape.borderRadius,
-        boxShadow: 'none',
-        
-        '&:hover': {
-            boxShadow: 'none',
-        }
-    },
-    WatchlistButton: {
-        borderRadius: theme.shape.borderRadius,
-        color: theme.palette.text.hint,
-        transition: '0.4s ease-in-out',
-        '&:hover': {
-            color: theme.palette.text.primary
         }
     },
 }));
@@ -106,122 +72,40 @@ const useStyles = makeStyles((theme) => ({
 //     })
 // }
 
-
-
-const RenderDataHtml = ({typeData, media_type, genre, posterStyle, StyleRating, StyleLikeButton, StyleWatchlistButton, handleLikeMovie, handleAddToWatchlist}) => {
-    const handleGetDate = (date) => {
-        const splitDate = date.split('-');
-        const newDate = splitDate[0]
-        
-        return newDate
-    }
-
-    return(
-        <React.Fragment>
-            {
-                typeData.map((item, index) => {
-                    return(
-                        <Grid key={item.id} item sm={6} md={4} style={{minHeight: '622px'}}>
-                            <ScrollAnimation animateOnce animateIn='fadeInSign' delay={(index % 2 === 0) ? 250 : 750 } animatePreScroll={index === 0 || index === 1 ? true : false}>
-                                <Card elevation={0}>
-                                    <CardActionArea>
-                                        <CardMedia
-                                            alt="Contemplative Reptile"
-                                            component="img"
-                                            className={posterStyle}
-                                            image={`https://image.tmdb.org/t/p/w500/${item.poster_path}`}
-                                        />
-                                    </CardActionArea>
-                                    <CardContent>
-                                        <Typography className={StyleRating} variant="h6">
-                                            <StarRoundedIcon />
-                                            <span>
-                                                {item.vote_average}
-                                            </span>
-                                        </Typography>
-                                        <Typography gutterBottom variant="h6">
-                                            {(media_type === 'tv') ? item.original_name : (media_type === 'movie') ? item.original_title : ''}
-                                        </Typography>
-                                        <Typography color="textSecondary" variant="button">
-                                            {(media_type === 'tv') ? `(${handleGetDate(item.first_air_date)})` : (media_type === 'movie') ? `(${handleGetDate(item.original_title)})` : ''}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions disableSpacing>
-                                        <IconButton aria-label='Like' className={StyleLikeButton} disableRipple onClick={() => handleLikeMovie(item)} >
-                                            <FavoriteBorderRoundedIcon />
-                                        </IconButton>
-                                        <Button color="primary" className={StyleWatchlistButton} disableRipple variant="contained" onClick={() => handleAddToWatchlist(item)} startIcon={<AddRoundedIcon />} >
-                                            Watchlist 
-                                        </Button>
-                                    </CardActions>
-                                </Card>
-                            </ScrollAnimation>
-                        </Grid>
-                    );
-                })
-            }
-        </React.Fragment>
-    )
-}
-
 const RenderDataElements = ({props, setGenreChosen, posterStyle, StyleRating, StyleLikeButton, StyleWatchlistButton, handleLikeMovie, handleAddToWatchlist}) => {
     if(props.gridPreviewApiCategory === 'movie'){
         // setGenreChosen(props.movieGenres)
         switch(props.gridPreviewApiType){
             case 'now_playing':
                 return(
-                    <RenderDataHtml 
+                    <RenderDataListItem 
                         typeData={props.nowPlaying} 
                         media_type={'movie'} 
-                        genre={props.movieGenres} 
-                        posterStyle={posterStyle} 
-                        StyleRating={StyleRating} 
-                        StyleLikeButton={StyleLikeButton} 
-                        StyleWatchlistButton={StyleWatchlistButton} 
-                        handleLikeMovie={handleLikeMovie} 
-                        handleAddToWatchlist={handleAddToWatchlist} 
+                        genre={props.movieGenres}
                     />
                 );
             case 'popular':
                 return(
-                    <RenderDataHtml 
+                    <RenderDataListItem 
                         typeData={props.moviePopular} 
                         media_type={'movie'} 
-                        genre={props.movieGenres} 
-                        posterStyle={posterStyle} 
-                        StyleRating={StyleRating} 
-                        StyleLikeButton={StyleLikeButton} 
-                        StyleWatchlistButton={StyleWatchlistButton} 
-                        handleLikeMovie={handleLikeMovie} 
-                        handleAddToWatchlist={handleAddToWatchlist} 
+                        genre={props.movieGenres}
                     />
                 );
             case 'top_rated':
                 return(
-                    <RenderDataHtml 
+                    <RenderDataListItem 
                         typeData={props.movieTopRated} 
                         media_type={'movie'} 
-                        genre={props.movieGenres} 
-                        posterStyle={posterStyle} 
-                        StyleRating={StyleRating} 
-                        StyleLikeButton={StyleLikeButton} 
-                        StyleWatchlistButton={StyleWatchlistButton} 
-                        handleLikeMovie={handleLikeMovie} 
-                        handleAddToWatchlist={handleAddToWatchlist} 
+                        genre={props.movieGenres}
                     />
                 );
             case 'upcoming':
                 return(
-                    <RenderDataHtml 
+                    <RenderDataListItem 
                         typeData={props.upcoming} 
                         media_type={'movie'} 
-                        genre={props.movieGenres} 
-                        posterStyle={posterStyle} 
-                        StyleRating={StyleRating} 
-                        StyleLikeButton={StyleLikeButton} 
-                        StyleWatchlistButton={StyleWatchlistButton} 
-                        handleLikeMovie={handleLikeMovie} 
-                        handleAddToWatchlist={handleAddToWatchlist} 
+                        genre={props.movieGenres}
                     />
                 );
             default:
@@ -232,54 +116,30 @@ const RenderDataElements = ({props, setGenreChosen, posterStyle, StyleRating, St
         switch(props.gridPreviewApiType){
             case 'airing_today':
                 return(
-                    <RenderDataHtml 
+                    <RenderDataListItem 
                         typeData={props.airingToday} 
                         media_type={'tv'} 
-                        posterStyle={posterStyle}
-                        StyleRating={StyleRating}  
-                        StyleLikeButton={StyleLikeButton} 
-                        StyleWatchlistButton={StyleWatchlistButton} 
-                        handleLikeMovie={handleLikeMovie} 
-                        handleAddToWatchlist={handleAddToWatchlist} 
                     />
                 );
             case 'on_the_air':
                 return(
-                    <RenderDataHtml 
+                    <RenderDataListItem 
                         typeData={props.onTv} 
                         media_type={'tv'} 
-                        posterStyle={posterStyle} 
-                        StyleRating={StyleRating} 
-                        StyleLikeButton={StyleLikeButton} 
-                        StyleWatchlistButton={StyleWatchlistButton} 
-                        handleLikeMovie={handleLikeMovie} 
-                        handleAddToWatchlist={handleAddToWatchlist} 
                     />
                 );
             case 'popular':
                 return(
-                    <RenderDataHtml 
+                    <RenderDataListItem 
                         typeData={props.tvPopular} 
                         media_type={'tv'} 
-                        posterStyle={posterStyle} 
-                        StyleRating={StyleRating} 
-                        StyleLikeButton={StyleLikeButton} 
-                        StyleWatchlistButton={StyleWatchlistButton} 
-                        handleLikeMovie={handleLikeMovie} 
-                        handleAddToWatchlist={handleAddToWatchlist} 
                     />
                 );
             case 'top_rated':
                 return(
-                    <RenderDataHtml 
+                    <RenderDataListItem 
                         typeData={props.tvTopRated} 
                         media_type={'tv'} 
-                        posterStyle={posterStyle} 
-                        StyleRating={StyleRating} 
-                        StyleLikeButton={StyleLikeButton} 
-                        StyleWatchlistButton={StyleWatchlistButton} 
-                        handleLikeMovie={handleLikeMovie} 
-                        handleAddToWatchlist={handleAddToWatchlist} 
                     />
                 );
             default:
@@ -302,15 +162,6 @@ const GridPreview = (props) => {
         event.preventDefault();
         setSortValue(event.target.value);
         // fetchApiData(searchValue, event.target.value);
-    }
-
-    // Grid Item Methods
-    const handleLikeMovie = () => {
-        
-    }
-
-    const handleAddToWatchlist = () => {
-
     }
 
     useEffect(() => {
@@ -442,16 +293,10 @@ const GridPreview = (props) => {
                 (props.gridPreviewApiCategory === '' || props.gridPreviewApiType === '')
                     ? null
                         :  
-                        <Grid item container alignItems="center" justify="flex-start" wrap="wrap" spacing={2}>
+                        <Grid item container alignItems="flex-start" justify="flex-start" wrap="wrap" spacing={2}>
                             <RenderDataElements 
                                 props={props} 
                                 setGenreChosen={setGenreChosen} 
-                                posterStyle={Style.Poster} 
-                                StyleRating={Style.Rating} 
-                                StyleLikeButton={Style.LikeButton} 
-                                StyleWatchlistButton={Style.WatchlistButton}  
-                                handleLikeMovie={handleLikeMovie} 
-                                handleAddToWatchlist={handleAddToWatchlist} 
                             />
                         </Grid>
             }

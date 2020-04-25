@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import * as appActions from '../../actions/AppAction';
 
 // Components
+import RenderDataListItem from '../RenderDataListItem/RenderDataListItem'
 
 // Material UI Components
 import { makeStyles, Dialog, Slide, Container, Box, Grid, TextField, Button, FormControl, Input, InputAdornment, Typography, DialogTitle, MenuItem, Hidden} from '@material-ui/core';
@@ -68,7 +69,46 @@ const useStyles = makeStyles((theme) => ({
     Visible: {
         opacity: 1,
         transition: 'opacity 0.4s ease-in-out',
-    }
+    },
+    Poster: {
+        width: '100%',
+        borderRadius: theme.shape.borderRadius,
+    },
+    Rating: {
+        display: 'flex',
+        alignItems: 'center',
+        lineHeight: 'normal',
+        '& svg': {
+            color: theme.palette.warning.main,
+        }
+    },
+    SortButton: {
+        boxShadow: 'none',
+        borderRadius: '25px',
+        
+        '&:hover': {
+            boxShadow: 'none',
+        }
+    },
+    LikeButton: {
+        borderRadius: theme.shape.borderRadius,
+        boxShadow: 'none',
+        
+        '&:hover': {
+            boxShadow: 'none',
+        }
+    },
+    WatchlistButton: {
+        boxShadow: 'none',
+        borderRadius: theme.shape.borderRadius,
+        color: theme.palette.text.hint,
+        transition: '0.4s ease-in-out',
+        '&:hover': {
+            boxShadow: 'none',
+            background: theme.palette.primary.main,
+            color: theme.palette.common.white
+        }
+    },
 }));
 
 const ShowSelectContent = ({justify, handleShowChange, showValue}) => {
@@ -89,9 +129,6 @@ const ShowSelectContent = ({justify, handleShowChange, showValue}) => {
                     style={{paddingRight: 0}}
                     value={showValue}
                     >
-                        <MenuItem value={'all'}>
-                            All
-                        </MenuItem>
                         <MenuItem value={'movie'}>
                             Only Movies
                         </MenuItem>
@@ -104,15 +141,18 @@ const ShowSelectContent = ({justify, handleShowChange, showValue}) => {
     );
 }
 
-const Search = ( {openSearchDialog, setOpenSearchDialog} ) => {
+const Search = (props) => {
     const Style = useStyles();
+
+    const [gridAnimation, setGridAnimation] = useState(true); 
 
     // Search Bar State
     const [searchFocused, setSearchFocused] = useState(false); 
+    const [searchEntered, setSearchEntered] = useState(false); 
     const [searchValue, setSearchValue] = useState(''); 
     
     // Show Select State
-    const [showValue, setShowValue] = useState('all'); 
+    const [showValue, setShowValue] = useState('movie'); 
     
     // Search Data
     const [searchMovieData, setSearchMovieData] = useState({}); 
@@ -120,72 +160,66 @@ const Search = ( {openSearchDialog, setOpenSearchDialog} ) => {
     const [searchResultsNumber, setSearchResultsNumber] = useState('0'); 
     const [searchPageNumber, setSearchPageNumber] = useState(0); 
 
-    // Search Bar Methods
     const handleClickCloseSearchDialog = () => {
-        setOpenSearchDialog(false);
+        props.setOpenSearchDialog(false);
     };
     
+    // Search Bar Methods
     const handleSearchChange = (event) => {
         event.preventDefault();
         setSearchValue(event.target.value);
-        fetchApiData(event.target.value, showValue);
+    }
+
+    const handleClickSearch = (event) => {
+        if(event.key === "Enter"){
+            setSearchEntered(true);
+        }
     }
 
     // Show Select Methods
     const handleShowChange = (event) => {
         event.preventDefault();
         setShowValue(event.target.value);
-        fetchApiData(searchValue, event.target.value);
     }
 
-    const fetchApiData = (value, showType) => {
+    useEffect(() => {
         const key = 'c287015949cec13fb17a26e50b4f054a';
 
-        if(value === ''){
-            setSearchMovieData({});
-            setSearchTVData({});
-            setSearchResultsNumber('0');
-            setSearchPageNumber(0);
-            return
-        } else {
-            if(showType === 'all'){
-                const types = ['movie', 'tv'];
-
-                types.forEach(type => {
-                    fetch(`https://api.themoviedb.org/3/search/${type}?query=${value}&api_key=${key}&language=en-US&page=1&include_adult=false`)
-                        .then(response => response.json())
-                        .then(json => {
-                            if(type === 'movie'){
-                                setSearchMovieData(json);
-                                setSearchResultsNumber(String(json.total_results + searchTVData.total_results));
-                                setSearchPageNumber(String(json.total_pages + searchTVData.total_pages));
-                                return;
-                            }else{
-                                setSearchTVData(json);
-                                setSearchResultsNumber(String(searchMovieData.total_results + json.total_results));
-                                setSearchPageNumber(String(searchMovieData.total_pages + json.total_pages));
-                                return;
-                            }  
-                        })
-                        .catch(error => console.log(error));          
+        if(searchEntered === true){
+            console.log('Enter');
+            fetch(`https://api.themoviedb.org/3/search/${showValue}?query=${searchValue}&api_key=${key}&language=en-US&include_adult=false`)
+                .then(response => response.json())
+                .then(json => {
+                    console.log(json)
+                    if(showValue === 'movie'){
+                        setSearchMovieData(json);
+                    }else{
+                        setSearchTVData(json);
+                    }
+                    setSearchResultsNumber(String(json.total_results));
+                    setSearchPageNumber(String(json.total_pages));
+                    return;
                 })
-            }else{
-                fetch(`https://api.themoviedb.org/3/search/${showType}?query=${value}&api_key=${key}&language=en-US&page=1&include_adult=false`)
-                    .then(response => response.json())
-                    .then(json => {
-                        if(showType === 'movie'){
-                            setSearchMovieData(json);
-                        }else{
-                            setSearchTVData(json);
-                        }
-                        setSearchResultsNumber(String(json.total_results));
-                        setSearchPageNumber(String(json.total_pages));
-                        return;
-                    })
-                    .catch(error => console.log(error));                
-            }
+                .catch(error => console.log(error));  
+        } else {
+            return
         }
-    }
+
+        if(searchValue === ''){
+            setGridAnimation(false);
+            
+            setTimeout(() => {
+                setSearchEntered(false);
+                setSearchMovieData({});
+                setSearchTVData({});
+                setSearchResultsNumber('0');
+                setSearchPageNumber(0);
+            }, 1000);
+        }
+
+        // return () => {
+        // }
+    }, [searchEntered, searchValue, showValue])
 
     return (
         <Dialog
@@ -196,7 +230,7 @@ const Search = ( {openSearchDialog, setOpenSearchDialog} ) => {
             fullWidth
             fullScreen
             maxWidth="md"
-            open={openSearchDialog}
+            open={props.openSearchDialog}
             TransitionComponent={Slide}
             transitionDuration={1000}
 
@@ -224,9 +258,10 @@ const Search = ( {openSearchDialog, setOpenSearchDialog} ) => {
                                     className={searchFocused === true ? `${Style.Search} ${Style.SearchActive}` : Style.Search}
                                     fullWidth
                                     onChange={(event) => handleSearchChange(event)}
+                                    onKeyPress={(event) => handleClickSearch(event)}
                                     onMouseDown={() => setSearchFocused(true)}
                                     onBlur={() => setSearchFocused(false)}
-                                    placeholder='Try "The Godfather"'
+                                    placeholder='Press enter to view data'
                                     startAdornment={
                                         <InputAdornment position="start">
                                             <SearchOutlinedIcon />
@@ -241,7 +276,7 @@ const Search = ( {openSearchDialog, setOpenSearchDialog} ) => {
                         <Box my={1.5} />
                         <Grid item container direction="row" justify="space-between" alignItems="center">
                             <Grid item sm={6}>
-                                <Typography className={searchValue === '' ? Style.Hidden : Style.Visible} variant="body2">
+                                <Typography className={searchEntered === false ? Style.Hidden : Style.Visible} variant="body2">
                                     {searchResultsNumber} matching results for {`"${searchValue}"`}
                                 </Typography>
                             </Grid>
@@ -252,6 +287,18 @@ const Search = ( {openSearchDialog, setOpenSearchDialog} ) => {
                                 <ShowSelectContent justify='flex-end' handleShowChange={handleShowChange} showValue={showValue} />
                             </Hidden>
                         </Grid>
+                        <Box my={2} />
+                        {
+                            (searchValue === '' || searchEntered === false || searchMovieData === {} || searchTVData === {})
+                                ? null
+                                    :
+                                        <Grid item container alignItems="flex-start" justify="flex-start" wrap="wrap" spacing={2}>
+                                            <RenderDataListItem 
+                                                typeData={showValue === 'movie' ? searchMovieData.results : searchTVData.results } 
+                                                media_type={showValue}
+                                            />
+                                        </Grid>
+                        }
                     </Grid>
                 </Box>
             </Container>

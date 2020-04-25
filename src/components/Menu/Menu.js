@@ -11,6 +11,7 @@ import { makeStyles, Box, Drawer, Grid, Hidden, IconButton, Button, List, ListIt
 // Icons
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
 import ArrowDropDownRoundedIcon from '@material-ui/icons/ArrowDropDownRounded';
+import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
 import TheatersOutlinedIcon from '@material-ui/icons/TheatersOutlined';
 import TvOutlinedIcon from '@material-ui/icons/TvOutlined';
@@ -167,10 +168,18 @@ const Menu = ( {openDrawer, gridPreviewApiCategory, gridPreviewApiType, user, ha
                     </Grid>
                     <Grid item>
                         <List>
+
+                            <ListItem className={`${Style.Header} ${Style.Button}`}>
+                                <HomeOutlinedIcon className={Style.MarginRight} />
+                                <ListItemText primary="Home" />
+                            </ListItem>
                             <ListItem className={`${Style.Header} ${Style.Button}`} button onClick={(event) => handleClickOpenSearchDialog(event)}>
                                 <SearchOutlinedIcon className={Style.MarginRight} />
-                                <ListItemText primary="Search " />
+                                <ListItemText primary="Search" />
                             </ListItem>
+
+                            <Divider className={Style.Divider} variant="inset" />
+
                             <ListItem className={openMovies === true ? `${Style.Header} ${Style.ButtonActive}` : `${Style.Header} ${Style.Button}`} button onClick={handleClickMovies}>
                                 <TheatersOutlinedIcon className={Style.MarginRight} />
                                 <ListItemText primary="Movies" />
@@ -228,10 +237,6 @@ const Menu = ( {openDrawer, gridPreviewApiCategory, gridPreviewApiType, user, ha
 
                             <Divider className={Style.Divider} variant="inset" />
 
-                            <ListItem className={`${Style.Header} ${Style.Button}`}>
-                                <SettingsOutlinedIcon className={Style.MarginRight} />
-                                <ListItemText primary="Settings " />
-                            </ListItem>
                             <ListItem className={`${Style.Header} ${Style.Button}`}>
                                 <ColorLensOutlinedIcon className={Style.MarginRight} />
                                 <ListItemText primary="Customize" />
