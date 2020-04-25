@@ -5,9 +5,20 @@ import * as actionType from '../actionTypes/actionTypes';
 import movieReducer from  './apiReducers/Movies';
 import tvReducer from  './apiReducers/TV';
 
-const initialState = null;
+const trendingInitialState = {};
 
-const errorReducer = (state = initialState, action) => {
+const errorInitialState = null;
+
+const trendingReducer = (state = trendingInitialState, action) => {
+    switch(action.type) {
+        case actionType.FETCH_API_TRENDING:
+            return action.payload
+        default: 
+            return state;
+    }
+}
+
+const errorReducer = (state = errorInitialState, action) => {
     switch(action.type) {
         case actionType.FETCH_API_ERROR:
             return {
@@ -19,6 +30,6 @@ const errorReducer = (state = initialState, action) => {
     }
 }
 
-const apiRootReducer = combineReducers({movies: movieReducer, tv: tvReducer, error: errorReducer});
+const apiRootReducer = combineReducers({trending: trendingReducer, movies: movieReducer, tv: tvReducer, error: errorReducer});
 
 export default apiRootReducer;

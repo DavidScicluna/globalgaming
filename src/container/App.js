@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 // Actions
-import * as errorAction from '../actions/apiActions/Error';
+import * as apiAction from '../actions/apiActions/Api';
 import * as movieActions from '../actions/apiActions/Movies';
 import * as tvActions from '../actions/apiActions/TV';
 import fetchApi from '../fetchApi'
@@ -13,6 +13,8 @@ import fetchApi from '../fetchApi'
 // Components
 import SignDialog from '../components/SignDialog/SignDialog';
 import Header from '../components/Header/Header';
+import Home from '../components/Home/Home';
+import GridPreview from '../components/GridPreview/GridPreview';
 
 // Material UI Components
 import { CssBaseline, createMuiTheme, ThemeProvider, Container, Box } from '@material-ui/core';
@@ -69,74 +71,11 @@ class App extends React.Component{
   componentDidMount = () => {
     const key = 'c287015949cec13fb17a26e50b4f054a';
 
-    this.fetchMovieApiData(key);
-    this.fetchTvApiData(key);
+    // this.fetchTrendingApiData(key);
   }
 
-  fetchMovieApiData = (key) => {
-    const types = [
-      {
-        action: this.props.fetchApiMovieNowPlaying,
-        type:'now_playing'
-      }, 
-      {
-        action: this.props.fetchApiMoviePopular,
-        type:'popular'
-      },
-      {
-        action: this.props.fetchApiMovieTopRated,
-        type:'top_rated'
-      }, 
-      {
-        action: this.props.fetchApiMovieUpcoming,
-        type:'upcoming'
-      },
-      {
-        action: this.props.fetchApiMovieGenres,
-        type:'genre'
-      }
-    ];
-
-    types.forEach((item) => {
-      if(item.type === 'genre'){
-        fetchApi(`https://api.themoviedb.org/3/genre/movie/list?api_key=${key}&language=en-US`, item.action);
-      }else{
-        fetchApi(`https://api.themoviedb.org/3/movie/${item.type}?api_key=${key}&language=en-US`, item.action);
-      }
-    })
-  }
-  
-  fetchTvApiData = (key) => {
-    const types = [
-      {
-        action: this.props.fetchApiTVAiringToday,
-        type:'airing_today'
-      }, 
-      {
-        action: this.props.fetchApiTVOnTv,
-        type:'on_the_air'
-      },
-      {
-        action: this.props.fetchApiTVPopular,
-        type:'popular'
-      },
-      {
-        action: this.props.fetchApiTVTopRated,
-        type:'top_rated'
-      }, 
-      {
-        action: this.props.fetchApiTVGenres,
-        type:'genre'
-      }
-    ];
-
-    types.forEach((item) => {
-      if(item.type === 'genre'){
-        fetchApi(`https://api.themoviedb.org/3/genre/tv/list?api_key=${key}&language=en-US`, item.action);
-      }else{
-        fetchApi(`https://api.themoviedb.org/3/tv/${item.type}?api_key=${key}&language=en-US`, item.action);
-      }
-    })
+  fetchTrendingApiData = (key) => {
+      fetchApi(`https://api.themoviedb.org/3/trending/all/week?&api_key=${key}`, this.props.fetchApiTrending);
   }
 
   // static propTypes = {
@@ -148,17 +87,20 @@ class App extends React.Component{
       <React.Fragment>
         <CssBaseline />
           <ThemeProvider theme={theme}>
-            <Router basename="/">
-              <Switch>
-                <Route exact path="/">
-                  <SignDialog />
-                  <Container maxWidth='md'>
-                    <Box className={this.props.openSignDialog === true || this.props.openSearchDialog === true ? 'animated fadeOutHeader' : 'animated fadeInHeader'}>
-                      <Header />
-                    </Box>
-                  </Container>
-                </Route>
-              </Switch>
+            <Router>
+              {/* <Switch> */}
+                <SignDialog />
+                <Container className={this.props.openSignDialog === true || this.props.openSearchDialog === true ? 'animated fadeOutHeader' : 'animated fadeInHeader'} maxWidth='md'>
+                  <Header />
+                  <Route exact path="/">
+                    {/* <Home /> */}
+                    <GridPreview />
+                  </Route>
+                  {/* <Route exact path="/">
+                    <Home />
+                  </Route> */}
+                </Container>
+              {/* </Switch> */}
             </Router>
           </ThemeProvider>
       </React.Fragment>
@@ -169,28 +111,19 @@ class App extends React.Component{
 // Fetching state from store
 const mapStateToProps = (state) => {
   return{
-      openSignDialog: state.app.openSignDialog,
-      openSearchDialog: state.app.openSearchDialog,
+    // Internal State (APP)
+    openSignDialog: state.app.openSignDialog,
+    openSearchDialog: state.app.openSearchDialog,
+    gridPreviewApiCategory: state.app.gridPreviewApiCategory,
+    gridPreviewApiType: state.app.gridPreviewApiType,
   };
 };
 
 // Sending some data to an action
 const matchDispatchToProps = (dispatch) => {
     return bindActionCreators({
-      // Movie Actions
-      fetchApiMovieNowPlaying: movieActions.fetchApiMovieNowPlaying,
-      fetchApiMoviePopular: movieActions.fetchApiMoviePopular,
-      fetchApiMovieTopRated: movieActions.fetchApiMovieTopRated,
-      fetchApiMovieUpcoming: movieActions.fetchApiMovieUpcoming,
-      fetchApiMovieGenres: movieActions.fetchApiMovieGenres,
-      // TV Actions
-      fetchApiTVAiringToday: tvActions.fetchApiTVAiringToday,
-      fetchApiTVOnTv: tvActions.fetchApiTVOnTv,
-      fetchApiTVPopular: tvActions.fetchApiTVPopular,
-      fetchApiTVTopRated: tvActions.fetchApiTVTopRated,
-      fetchApiTVGenres: tvActions.fetchApiTVGenres,
-      // API Error Actions
-      fetchApiError: errorAction.fetchApiError,
+      // API Actions
+      fetchApiTrending: apiAction.fetchApiTrending,
     }, dispatch);
 }
 

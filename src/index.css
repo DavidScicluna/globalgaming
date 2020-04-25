@@ -46,6 +46,7 @@ body{
 
 .fadeOutHeader {
   animation-name: fadeOut;
+  animation-delay: 0.5s;
 }
 
 /* ---------- fadeIn ---------- */
@@ -65,7 +66,7 @@ body{
 
 .fadeInHeader {
   animation-name: fadeIn;
-  animation-delay: 1s;
+  animation-delay: 0.5s;
 }
 
 .animated {

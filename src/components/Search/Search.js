@@ -16,7 +16,9 @@ import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
 
 // Material UI Custom Component Style
 const useStyles = makeStyles((theme) => ({
-
+    DialogTitle: {
+        padding: theme.spacing(2),
+    },
     Button : {
         borderRadius: theme.shape.borderRadius,
         color: theme.palette.text.hint,
@@ -129,6 +131,7 @@ const Search = ( {openSearchDialog, setOpenSearchDialog} ) => {
         fetchApiData(event.target.value, showValue);
     }
 
+    // Show Select Methods
     const handleShowChange = (event) => {
         event.preventDefault();
         setShowValue(event.target.value);
@@ -198,7 +201,7 @@ const Search = ( {openSearchDialog, setOpenSearchDialog} ) => {
             transitionDuration={1000}
 
         >
-            <DialogTitle>
+            <DialogTitle className={Style.DialogTitle}>
                 <Button className={Style.Button} disableRipple onClick={handleClickCloseSearchDialog}>
                     <div className={Style.ButtonContent}>
                         <CloseRoundedIcon />
@@ -208,7 +211,7 @@ const Search = ( {openSearchDialog, setOpenSearchDialog} ) => {
             </DialogTitle>
             <Container maxWidth="sm" disableGutters>
                 <Box p={2}>
-                    <Grid container direction="column" spacing={3}>
+                    <Grid container direction="column">
                         <Grid item>
                             <Typography variant="h6">
                                 Find a Movie or Series
@@ -235,6 +238,7 @@ const Search = ( {openSearchDialog, setOpenSearchDialog} ) => {
                                 />
                             </FormControl>
                         </Grid>
+                        <Box my={1.5} />
                         <Grid item container direction="row" justify="space-between" alignItems="center">
                             <Grid item sm={6}>
                                 <Typography className={searchValue === '' ? Style.Hidden : Style.Visible} variant="body2">

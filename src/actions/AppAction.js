@@ -14,6 +14,20 @@ export const setOpenSearchDialog = (bool) => {
     }
 };
 
+export const setGridPreviewApiCategory = (category) => {
+    return {
+        type: actionType.SET_GRIDPREVIEWAPICATEGORY,
+        payload: category
+    }
+};
+
+export const setGridPreviewApiType = (type) => {
+    return {
+        type: actionType.SET_GRIDPREVIEWAPITYPE,
+        payload: type
+    }
+};
+
 export const setUsers = (users) => {
     return {
         type: actionType.SET_USERS,

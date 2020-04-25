@@ -1,5 +1,5 @@
 // Actions Types
-import * as actions from './actions/apiActions/Error';
+import * as actions from './actions/apiActions/Api';
 
 const fetchApiData = (link, action) => {
     fetch(link)

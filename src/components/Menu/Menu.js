@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const Menu = ( {openDrawer, user, handleCloseDrawer, setOpenSearchDialog} ) => {
+const Menu = ( {openDrawer, gridPreviewApiCategory, gridPreviewApiType, user, handleCloseDrawer, setOpenSearchDialog, setGridPreviewApiCategory, setGridPreviewApiType} ) => {
     const Style = useStyles();
 
     // Menu List Items State
@@ -83,22 +83,22 @@ const Menu = ( {openDrawer, user, handleCloseDrawer, setOpenSearchDialog} ) => {
         {
             id: Math.random(),
             title:'Now Playing',
-            method: null
+            type:'now_playing'
         }, 
         {
             id: Math.random(),
             title:'Most Popular',
-            method: null
+            type:'popular'
         },
         {
             id: Math.random(),
             title:'Top Rated',
-            method: null
+            type:'top_rated'
         },
         {
             id: Math.random(),
             title:'Upcoming',
-            method: null
+            type:'upcoming'
         },
     ];
 
@@ -106,22 +106,22 @@ const Menu = ( {openDrawer, user, handleCloseDrawer, setOpenSearchDialog} ) => {
         {
             id: Math.random(),
             title:'Airing Today',
-            method: null
+            type:'airing_today'
         }, 
         {
             id: Math.random(),
             title:'Showing Now On TV',
-            method: null
+            type:'on_the_air'
         },
         {
             id: Math.random(),
             title:'Most Popular',
-            method: null
+            type:'popular'
         },
         {
             id: Math.random(),
             title:'Top Rated',
-            method: null
+            type:'top_rated'
         },
     ];
 
@@ -133,6 +133,12 @@ const Menu = ( {openDrawer, user, handleCloseDrawer, setOpenSearchDialog} ) => {
     const handleClickTV = () => {
         setOpenTV(!openTV);
     };
+
+    const handleOpenGridPreview = (category, type) => {
+        setGridPreviewApiCategory(category);
+        setGridPreviewApiType(type);
+        handleCloseDrawer();
+    }
 
     // Search Dialog Methods
     const handleClickOpenSearchDialog = (event) => {
@@ -176,7 +182,7 @@ const Menu = ( {openDrawer, user, handleCloseDrawer, setOpenSearchDialog} ) => {
                                     {
                                         movieTypes.map(item => {
                                             return(
-                                                <ListItem key={item.id} button className={`${Style.Nested} ${Style.Button}`} onClick={item.method}>
+                                                <ListItem key={item.id} button className={gridPreviewApiCategory === 'movie' && gridPreviewApiType === item.type ? `${Style.Nested} ${Style.ButtonActive}` : `${Style.Nested} ${Style.Button}`} onClick={() => handleOpenGridPreview('movie', item.type)}>
                                                     <ListItemText primary={item.title} />
                                                 </ListItem>
                                             );
@@ -196,7 +202,7 @@ const Menu = ( {openDrawer, user, handleCloseDrawer, setOpenSearchDialog} ) => {
                                     {
                                         tvTypes.map(item => {
                                             return(
-                                                <ListItem key={item.id} button className={`${Style.Nested} ${Style.Button}`} onClick={item.method}>
+                                                <ListItem key={item.id} button className={gridPreviewApiCategory === 'tv' && gridPreviewApiType === item.type ? `${Style.Nested} ${Style.ButtonActive}` : `${Style.Nested} ${Style.Button}`} onClick={() => handleOpenGridPreview('tv', item.type)}>
                                                     <ListItemText primary={item.title} />
                                                 </ListItem>
                                             );
@@ -241,6 +247,8 @@ const Menu = ( {openDrawer, user, handleCloseDrawer, setOpenSearchDialog} ) => {
 // Fetching state from store
 const mapStateToProps = (state) => {
     return{
+        gridPreviewApiCategory: state.app.gridPreviewApiCategory,
+        gridPreviewApiType: state.app.gridPreviewApiType,
         user: state.app.user,
     };
 };
@@ -249,6 +257,8 @@ const mapStateToProps = (state) => {
 const matchDispatchToProps = (dispatch) => {
     return bindActionCreators({
         setOpenSearchDialog: appActions.setOpenSearchDialog,
+        setGridPreviewApiCategory: appActions.setGridPreviewApiCategory,
+        setGridPreviewApiType: appActions.setGridPreviewApiType,
     }, dispatch);
 }
 

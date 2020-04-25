@@ -6,6 +6,8 @@ const getUser = JSON.parse(localStorage.getItem("users") || "{}");
 const initialState = {
     openSignDialog: false,
     openSearchDialog: false,
+    gridPreviewApiCategory: '',
+    gridPreviewApiType: '',
     users: getUsers,
     user: getUser
 }
@@ -21,6 +23,16 @@ const appReducer = (state = initialState, action) => {
             return {
                 ...state,
                 openSearchDialog: action.payload
+            }
+        case actionType.SET_GRIDPREVIEWAPICATEGORY:
+            return {
+                ...state,
+                gridPreviewApiCategory: action.payload,
+            }
+        case actionType.SET_GRIDPREVIEWAPITYPE:
+            return {
+                ...state,
+                gridPreviewApiType: action.payload,
             }
         case actionType.SET_USERS:
             return {

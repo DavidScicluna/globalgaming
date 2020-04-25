@@ -24,13 +24,14 @@ const useStyles = makeStyles((theme) => ({
     Button : {
         color: theme.palette.text.hint,
         transition: '0.4s ease-in-out',
+        background: theme.palette.action.hover,
         '&:hover': {
-            background: theme.palette.action.hover,
+            background: theme.palette.action.focus,
             color: theme.palette.text.primary
         }
     },
     ButtonActive : {
-        background: theme.palette.action.hover,
+        background: theme.palette.action.focus,
         color: theme.palette.text.primary,
     },
     IconActive : {
