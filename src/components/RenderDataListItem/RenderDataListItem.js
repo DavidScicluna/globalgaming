@@ -11,7 +11,7 @@ import AddRoundedIcon from '@material-ui/icons/AddRounded';
 
 // Material UI Custom Component Style
 const useStyles = makeStyles((theme) => ({
-    '@media (min-width: 0.24px)': {
+    '@media (min-width: 1024px)': {
         Rating: {
             fontSize: theme.typography.h5.fontSize
         },
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     },
     Poster: {
         width: '100%',
-        borderRadius: theme.shape.borderRadius,
+        borderRadius: `${theme.shape.borderRadius} ${theme.shape.borderRadius} 0 0`,
     },
     Rating: {
         display: 'flex',
@@ -95,7 +95,7 @@ export default function RenderDataListItem( {typeData, category} ) {
                                     <Card elevation={0} className={'animated fadeInSign'} style={{animationDelay: (index % 2 === 0) ? 250 : 750}}>
                                         <CardActionArea>
                                             <CardMedia
-                                                alt="Contemplative Reptile"
+                                                alt={(category === 'tv') ? item.original_name : (category === 'movie') ? item.title : ''}
                                                 component="img"
                                                 className={Style.Poster}
                                                 image={`https://image.tmdb.org/t/p/w500/${item.poster_path}`}

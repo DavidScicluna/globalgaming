@@ -14,6 +14,13 @@ export const setOpenSearchDialog = (bool) => {
     }
 };
 
+export const setOpenCustomizeDialog = (bool) => {
+    return {
+        type: actionType.SET_OPENCUSTOMIZEDIALOG,
+        payload: bool
+    }
+};
+
 export const setGridPreviewApiCategory = (category) => {
     return {
         type: actionType.SET_GRIDPREVIEWAPICATEGORY,

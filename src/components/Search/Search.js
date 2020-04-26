@@ -17,6 +17,9 @@ import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
 
 // Material UI Custom Component Style
 const useStyles = makeStyles((theme) => ({
+    Dialog: {
+        backgroundColor: theme.palette.background.paper,
+    },
     DialogTitle: {
         padding: theme.spacing(2),
     },
@@ -215,12 +218,10 @@ const Search = (props) => {
     return (
         <Dialog
             className={Style.Dialog}
-            aria-labelledby="SignTitle"
-            disableBackdropClick
-            disableEscapeKeyDown
             fullWidth
             fullScreen
             maxWidth="md"
+            onClose={handleClickCloseSearchDialog}
             open={props.openSearchDialog}
             TransitionComponent={Slide}
             transitionDuration={1000}

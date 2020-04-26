@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {HashRouter as Router, Switch, Route} from "react-router-dom";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -12,12 +11,13 @@ import fetchApi from '../fetchApi'
 
 // Components
 import SignDialog from '../components/SignDialog/SignDialog';
+import Customize from '../components/Customize/Customize';
 import Header from '../components/Header/Header';
 import Home from '../components/Home/Home';
 import GridPreview from '../components/GridPreview/GridPreview';
 
 // Material UI Components
-import { CssBaseline, createMuiTheme, ThemeProvider, Container, Box } from '@material-ui/core';
+import { CssBaseline, createMuiTheme, ThemeProvider, Container, Box, Fade } from '@material-ui/core';
 
 // Material UI Custom Theme
 const theme = createMuiTheme({
@@ -26,9 +26,9 @@ const theme = createMuiTheme({
       black: '#212121',
       white: '#FAFAFA',
     },
-    type: 'light',
+    // type: 'dark',
     primary: {
-      main: '#1289A7',
+      main: '#7CB342',
     },
     secondary: {
       main: '#C0392B'
@@ -45,15 +45,16 @@ const theme = createMuiTheme({
     success: {
       main: '#009432',
     },
-    contrastThreshold: 2,
+    contrastThreshold: 4,
     text: {
-      primary: 'rgba(0, 0, 0, 0.87)',
-      secondary: 'rgba(0, 0, 0, 0.64)',
-      disabled: 'rgba(0, 0, 0, 0.38)',
-      hint: 'rgba(0, 0, 0, 0.54)',
+      primary: '#212121',
+      secondary: '#757575',
+      // disabled: '#BDBDBD',
+      // hint: '#BDBDBD',
     },
     action: {
-      hover: 'rgba(0, 0, 0, 0.10)',
+      hover: 'rgba(0, 0, 0, 0.06)',
+      focus: 'rgba(0, 0, 0, 0.16)',
     }
   },
   typography: {
@@ -64,19 +65,36 @@ const theme = createMuiTheme({
 class App extends React.Component{
   constructor(props){
     super(props);
-    this.state = {
-    }
+    this.state = {}
   }
 
   componentDidMount = () => {
     const key = 'c287015949cec13fb17a26e50b4f054a';
 
-    // this.fetchTrendingApiData(key);
+    this.fetchTrendingApiData(key);
+    this.fetchTrendingApiPopular(key);
     this.fetchTrendingApiGenres(key);
   }
 
   fetchTrendingApiData = (key) => {
       fetchApi(`https://api.themoviedb.org/3/trending/all/week?&api_key=${key}`, this.props.fetchApiTrending);
+  }
+
+  fetchTrendingApiPopular = (key) => {
+    const types = [
+      {
+        action: this.props.fetchApiMoviePopular,
+        type: 'movie',
+      },
+      {
+        action: this.props.fetchApiTVPopular,
+        type: 'tv',
+      },
+    ]
+
+    types.forEach(item => {
+      fetchApi(`https://api.themoviedb.org/3/${item.type}/popular?api_key=${key}&language=en-US`, item.action);
+    });
   }
 
   fetchTrendingApiGenres = (key) => {
@@ -96,10 +114,6 @@ class App extends React.Component{
     });
   }
 
-  // static propTypes = {
-
-  // }
-
   render(){
     return(
       <React.Fragment>
@@ -108,12 +122,20 @@ class App extends React.Component{
             <Router>
               {/* <Switch> */}
                 <SignDialog />
+                <Customize />
                 <Container className={this.props.openSignDialog === true || this.props.openSearchDialog === true ? 'animated fadeOutHeader' : 'animated fadeInHeader'} maxWidth='md'>
                   <Header />
                   <Route exact path="/">
                     <Box py={2}>
-                      <Home />
-                      <GridPreview />
+                      <Fade in timeout={1000}>
+                        {
+                          (this.props.gridPreviewApiCategory === "" || this.props.gridPreviewApiType === "" )
+                            ?
+                            <Home />
+                              :
+                              <GridPreview />
+                        }
+                      </Fade>
                     </Box>
                   </Route>
                 </Container>
@@ -142,8 +164,10 @@ const matchDispatchToProps = (dispatch) => {
       // API Actions
       fetchApiTrending: apiAction.fetchApiTrending,
       // API Movies
+      fetchApiMoviePopular: movieActions.fetchApiMoviePopular,
       fetchApiMovieGenres: movieActions.fetchApiMovieGenres,
       // API TV
+      fetchApiTVPopular: tvActions.fetchApiTVPopular,
       fetchApiTVGenres: tvActions.fetchApiTVGenres,
     }, dispatch);
 }

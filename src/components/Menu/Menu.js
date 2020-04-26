@@ -18,7 +18,6 @@ import TvOutlinedIcon from '@material-ui/icons/TvOutlined';
 import FavoriteBorderOutlinedIcon from '@material-ui/icons/FavoriteBorderOutlined';
 import HourglassEmptyOutlinedIcon from '@material-ui/icons/HourglassEmptyOutlined';
 import StarBorderOutlinedIcon from '@material-ui/icons/StarBorderOutlined';
-import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
 import ColorLensOutlinedIcon from '@material-ui/icons/ColorLensOutlined';
 
 // Material UI Custom Component Style
@@ -36,7 +35,13 @@ const useStyles = makeStyles((theme) => ({
         }
     },
     ButtonActive : {
-        background: theme.palette.action.hover,
+        transition: '0.4s ease-in-out',
+        background: theme.palette.primary.main,
+        color: theme.palette.text.primary,
+    },
+    ButtonFolderActive : {
+        transition: '0.4s ease-in-out',
+        background: theme.palette.action.focus,
         color: theme.palette.text.primary,
     },
     ButtonContent: {
@@ -73,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const Menu = ( {openDrawer, gridPreviewApiCategory, gridPreviewApiType, user, handleCloseDrawer, setOpenSearchDialog, setGridPreviewApiCategory, setGridPreviewApiType, setGridPreviewApiTitle} ) => {
+const Menu = (props) => {
     const Style = useStyles();
 
     // Menu List Items State
@@ -135,32 +140,38 @@ const Menu = ( {openDrawer, gridPreviewApiCategory, gridPreviewApiType, user, ha
         setOpenTV(!openTV);
     };
 
-    const handleOpenGridPreview = (category, item) => {
-        setGridPreviewApiCategory(category);
-        setGridPreviewApiType(item.type);
-        setGridPreviewApiTitle(item.title);
-        handleCloseDrawer();
+    const handleOpenPage = (category, item) => {
+        props.setGridPreviewApiCategory(category);
+        props.setGridPreviewApiType(item.type);
+        props.setGridPreviewApiTitle(item.title);
+        props.handleCloseDrawer();
     }
 
     // Search Dialog Methods
     const handleClickOpenSearchDialog = (event) => {
         event.preventDefault();
-        setOpenSearchDialog(true);
+        props.setOpenSearchDialog(true);
+    };
+
+    // Search Dialog Methods
+    const handleClickOpenCustomizeDialog = (event) => {
+        event.preventDefault();
+        props.setOpenCustomizeDialog(true);
     };
 
     return (
         <Drawer
             anchor="left"
             elevation={2}
-            open={openDrawer}
-            onClose={handleCloseDrawer}
+            open={props.openDrawer}
+            onClose={props.handleCloseDrawer}
             transitionDuration={750}
             // variant="persistent"
         >
             <Box p={2} className={Style.Drawer}>
                 <Grid container direction="column" spacing={2}>
                     <Grid item>
-                        <Button className={Style.Button} disableRipple onClick={handleCloseDrawer}>
+                        <Button className={Style.Button} disableRipple onClick={props.handleCloseDrawer}>
                             <div className={Style.ButtonContent}>
                                 <CloseRoundedIcon />
                                 <span>Close</span>
@@ -170,7 +181,7 @@ const Menu = ( {openDrawer, gridPreviewApiCategory, gridPreviewApiType, user, ha
                     <Grid item>
                         <List>
 
-                            <ListItem className={`${Style.Header} ${Style.Button}`}>
+                            <ListItem className={props.gridPreviewApiCategory === '' || props.gridPreviewApiType === '' ? `${Style.Header} ${Style.ButtonActive}` : `${Style.Header} ${Style.Button}`} button onClick={() => handleOpenPage('', '')}>
                                 <HomeOutlinedIcon className={Style.MarginRight} />
                                 <ListItemText primary="Home" />
                             </ListItem>
@@ -181,7 +192,7 @@ const Menu = ( {openDrawer, gridPreviewApiCategory, gridPreviewApiType, user, ha
 
                             <Divider className={Style.Divider} variant="inset" />
 
-                            <ListItem className={openMovies === true ? `${Style.Header} ${Style.ButtonActive}` : `${Style.Header} ${Style.Button}`} button onClick={handleClickMovies}>
+                            <ListItem className={openMovies === true ? `${Style.Header} ${Style.ButtonFolderActive}` : `${Style.Header} ${Style.Button}`} button onClick={handleClickMovies}>
                                 <TheatersOutlinedIcon className={Style.MarginRight} />
                                 <ListItemText primary="Movies" />
                                 <Box style={{flex: 1}} />
@@ -192,7 +203,7 @@ const Menu = ( {openDrawer, gridPreviewApiCategory, gridPreviewApiType, user, ha
                                     {
                                         movieTypes.map(item => {
                                             return(
-                                                <ListItem key={item.id} button className={gridPreviewApiCategory === 'movie' && gridPreviewApiType === item.type ? `${Style.Nested} ${Style.ButtonActive}` : `${Style.Nested} ${Style.Button}`} onClick={() => handleOpenGridPreview('movie', item)}>
+                                                <ListItem key={item.id} button className={props.gridPreviewApiCategory === 'movie' && props.gridPreviewApiType === item.type ? `${Style.Nested} ${Style.ButtonActive}` : `${Style.Nested} ${Style.Button}`} onClick={() => handleOpenPage('movie', item)}>
                                                     <ListItemText primary={item.title} />
                                                 </ListItem>
                                             );
@@ -201,7 +212,7 @@ const Menu = ( {openDrawer, gridPreviewApiCategory, gridPreviewApiType, user, ha
                                 </List>
                             </Collapse>
 
-                            <ListItem className={openTV === true ? `${Style.Header} ${Style.ButtonActive}` : `${Style.Header} ${Style.Button}`} button onClick={handleClickTV}>
+                            <ListItem className={openTV === true ? `${Style.Header} ${Style.ButtonFolderActive}` : `${Style.Header} ${Style.Button}`} button onClick={handleClickTV}>
                                 <TvOutlinedIcon className={Style.MarginRight} />
                                 <ListItemText primary="TV" />
                                 <Box style={{flex: 1}} />
@@ -212,7 +223,7 @@ const Menu = ( {openDrawer, gridPreviewApiCategory, gridPreviewApiType, user, ha
                                     {
                                         tvTypes.map(item => {
                                             return(
-                                                <ListItem key={item.id} button className={gridPreviewApiCategory === 'tv' && gridPreviewApiType === item.type ? `${Style.Nested} ${Style.ButtonActive}` : `${Style.Nested} ${Style.Button}`} onClick={() => handleOpenGridPreview('tv', item)}>
+                                                <ListItem key={item.id} button className={props.gridPreviewApiCategory === 'tv' && props.gridPreviewApiType === item.type ? `${Style.Nested} ${Style.ButtonActive}` : `${Style.Nested} ${Style.Button}`} onClick={() => handleOpenPage('tv', item)}>
                                                     <ListItemText primary={item.title} />
                                                 </ListItem>
                                             );
@@ -238,7 +249,7 @@ const Menu = ( {openDrawer, gridPreviewApiCategory, gridPreviewApiType, user, ha
 
                             <Divider className={Style.Divider} variant="inset" />
 
-                            <ListItem className={`${Style.Header} ${Style.Button}`}>
+                            <ListItem className={`${Style.Header} ${Style.Button}`} button onClick={(event) => {handleClickOpenCustomizeDialog(event); props.handleCloseDrawer()}}>
                                 <ColorLensOutlinedIcon className={Style.MarginRight} />
                                 <ListItemText primary="Customize" />
                             </ListItem>
@@ -255,7 +266,6 @@ const mapStateToProps = (state) => {
     return{
         gridPreviewApiCategory: state.app.gridPreviewApiCategory,
         gridPreviewApiType: state.app.gridPreviewApiType,
-        user: state.app.user,
     };
 };
 
@@ -263,6 +273,7 @@ const mapStateToProps = (state) => {
 const matchDispatchToProps = (dispatch) => {
     return bindActionCreators({
         setOpenSearchDialog: appActions.setOpenSearchDialog,
+        setOpenCustomizeDialog: appActions.setOpenCustomizeDialog,
         setGridPreviewApiCategory: appActions.setGridPreviewApiCategory,
         setGridPreviewApiType: appActions.setGridPreviewApiType,
         setGridPreviewApiTitle: appActions.setGridPreviewApiTitle,

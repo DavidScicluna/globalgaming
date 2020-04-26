@@ -136,7 +136,7 @@ const Header = ( {user, setOpenSignDialog, setOpenSearchDialog} ) => {
                     </Hidden>
                 </Toolbar>            
             </Paper>
-            <Menu openDrawer={openDrawer} user={user} handleCloseDrawer={handleCloseMenuDrawer} />
+            <Menu openDrawer={openDrawer} handleCloseDrawer={handleCloseMenuDrawer} />
             <Search />
             <AccountMenu anchorEl={anchorEl} openPopper={openPopper} popperID={popperID} user={user} handleClosePopover={handleCloseAccountMenuPopover} />
         </React.Fragment>
