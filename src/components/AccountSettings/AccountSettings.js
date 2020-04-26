@@ -108,7 +108,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const Customize = (props) => {
+const AccountSettings = (props) => {
     const Style = useStyles();
 
     const colors = [
@@ -223,4 +223,4 @@ const matchDispatchToProps = (dispatch) => {
     }, dispatch);
 }
 
-export default connect(mapStateToProps, matchDispatchToProps)(Customize);
+export default connect(mapStateToProps, matchDispatchToProps)(AccountSettings);

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import * as appActions from '../../actions/AppAction';
 
 // Material UI Components
-import { makeStyles, Box, Drawer, Grid, Hidden, IconButton, Button, List, ListItem, ListItemText, Collapse, Divider, ButtonGroup} from '@material-ui/core';
+import { makeStyles, Drawer, Box, Grid, Button, List, ListItem, ListItemText, Divider, Collapse} from '@material-ui/core';
 
 // Icons
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
@@ -17,7 +17,6 @@ import TheatersOutlinedIcon from '@material-ui/icons/TheatersOutlined';
 import TvOutlinedIcon from '@material-ui/icons/TvOutlined';
 import FavoriteBorderOutlinedIcon from '@material-ui/icons/FavoriteBorderOutlined';
 import HourglassEmptyOutlinedIcon from '@material-ui/icons/HourglassEmptyOutlined';
-import StarBorderOutlinedIcon from '@material-ui/icons/StarBorderOutlined';
 import ColorLensOutlinedIcon from '@material-ui/icons/ColorLensOutlined';
 
 // Material UI Custom Component Style
@@ -25,29 +24,49 @@ const useStyles = makeStyles((theme) => ({
     Drawer: {
         minWidth: '250px'
     },
-    Button : {
-        borderRadius: theme.shape.borderRadius,
-        color: theme.palette.text.hint,
+    CloseButton : {
+        color: theme.palette.text.secondary,
         transition: '0.4s ease-in-out',
+        borderRadius: theme.shape.borderRadius,
+        background: theme.palette.action.hover,
+        '&:hover': {
+            background: theme.palette.action.focus,
+            color: theme.palette.text.primary
+        }
+    },
+    Button : {
+        color: theme.palette.text.secondary,
+        transition: '0.4s ease-in-out',
+        borderRadius: theme.shape.borderRadius,
         '&:hover': {
             background: theme.palette.action.hover,
             color: theme.palette.text.primary
         }
     },
     ButtonActive : {
-        transition: '0.4s ease-in-out',
+        borderRadius: theme.shape.borderRadius,
         background: theme.palette.primary.main,
-        color: theme.palette.text.primary,
+        color: theme.palette.common.white,
+        '&:hover': {
+            background: theme.palette.primary.main,
+            color: theme.palette.common.white
+        }
     },
     ButtonFolderActive : {
-        transition: '0.4s ease-in-out',
-        background: theme.palette.action.focus,
+        borderRadius: theme.shape.borderRadius,
+        background: theme.palette.action.hover,
         color: theme.palette.text.primary,
     },
-    ButtonContent: {
-        display: 'flex',
-        alignItems: 'center',
-        lineHeight: 'normal'
+    Header: {
+        margin: theme.spacing(0.5, 0),
+        '& span': {
+            fontSize: theme.typography.h6.fontSize,
+            fontWeight: theme.typography.fontWeightMedium,
+            textTransform: 'uppercase',
+        }
+    },
+    MarginRight: {
+        marginRight: theme.spacing(1),
     },
     IconActive : {
         color: theme.palette.text.primary,
@@ -58,24 +77,19 @@ const useStyles = makeStyles((theme) => ({
         transform: 'rotate(360deg)',
         transition: 'transform 0.4s ease-in-out',
     },
+    ButtonContent: {
+        display: 'flex',
+        alignItems: 'center',
+        lineHeight: 'normal'
+    },
     Nested: {
         margin: theme.spacing(1, 0),
         paddingLeft: theme.spacing(4),
-    },
-    Header: {
-        margin: theme.spacing(0.5, 0),
-        '& span': {
-            fontSize: [[theme.typography.h6.fontSize], '!important'],
-            fontWeight: [[theme.typography.fontWeightMedium], '!important'],
-            textTransform: 'uppercase',
-        }
+        fontWeight: theme.typography.fontWeightMedium,
     },
     Divider: {
         margin: theme.spacing(2, 0),
     },
-    MarginRight: {
-        marginRight: theme.spacing(1),
-    }
 }));
 
 const Menu = (props) => {
@@ -132,14 +146,17 @@ const Menu = (props) => {
     ];
 
     // Menu List Items Methods
+    // Opens Movie Dropdown 
     const handleClickMovies = () => {
         setOpenMovies(!openMovies);
     };
     
+    // Opens Tv Dropdown
     const handleClickTV = () => {
         setOpenTV(!openTV);
     };
 
+    // This method will open the GridPreview component with the data the user chooses
     const handleOpenPage = (category, item) => {
         props.setGridPreviewApiCategory(category);
         props.setGridPreviewApiType(item.type);
@@ -148,12 +165,13 @@ const Menu = (props) => {
     }
 
     // Search Dialog Methods
+    // Opens Search Dialog Component
     const handleClickOpenSearchDialog = (event) => {
         event.preventDefault();
         props.setOpenSearchDialog(true);
     };
 
-    // Search Dialog Methods
+    // Closes Search Dialog Component
     const handleClickOpenCustomizeDialog = (event) => {
         event.preventDefault();
         props.setOpenCustomizeDialog(true);
@@ -166,12 +184,11 @@ const Menu = (props) => {
             open={props.openDrawer}
             onClose={props.handleCloseDrawer}
             transitionDuration={750}
-            // variant="persistent"
         >
             <Box p={2} className={Style.Drawer}>
                 <Grid container direction="column" spacing={2}>
                     <Grid item>
-                        <Button className={Style.Button} disableRipple onClick={props.handleCloseDrawer}>
+                        <Button className={Style.CloseButton} disableRipple onClick={props.handleCloseDrawer}>
                             <div className={Style.ButtonContent}>
                                 <CloseRoundedIcon />
                                 <span>Close</span>
@@ -234,7 +251,7 @@ const Menu = (props) => {
 
                             <Divider className={Style.Divider} variant="inset" />
 
-                            <ListItem className={`${Style.Header} ${Style.Button}`} button onClick={() => {props.setGridPreviewApiCategory('liked'); props.handleCloseDrawer()}} disabled={props.user.access === 'guest' ? true : false}>
+                            <ListItem className={`${Style.Header} ${Style.Button}`} button onClick={() => {props.setGridPreviewApiCategory('likes'); props.handleCloseDrawer()}} disabled={props.user.access === 'guest' ? true : false}>
                                 <FavoriteBorderOutlinedIcon className={Style.MarginRight} />
                                 <ListItemText primary="Liked" />
                             </ListItem>

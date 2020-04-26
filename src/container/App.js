@@ -1,5 +1,4 @@
 import React from 'react';
-import {HashRouter as Router, Switch, Route} from "react-router-dom";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -11,7 +10,7 @@ import fetchApi from '../fetchApi'
 
 // Components
 import SignDialog from '../components/SignDialog/SignDialog';
-import Customize from '../components/Customize/Customize';
+import AccountSettings from '../components/AccountSettings/AccountSettings';
 import Header from '../components/Header/Header';
 import Home from '../components/Home/Home';
 import UserData from '../components/UserData/UserData';
@@ -120,28 +119,24 @@ class App extends React.Component{
       <React.Fragment>
         <CssBaseline />
           <ThemeProvider theme={theme}>
-            <Router>
-              {/* <Switch> */}
-                <SignDialog />
-                <Customize />
-                <Container className={'animated fadeInHeader'} maxWidth='md'>
-                  <Header />
-                    <Box py={2}>
-                      {
-                        (this.props.gridPreviewApiCategory === "liked" || this.props.gridPreviewApiCategory === "watchlist")
-                          ?
-                          <UserData />
-                            :
-                            (this.props.gridPreviewApiCategory === "" || this.props.gridPreviewApiType === "")
-                              ?
-                              <Home />
-                                :
-                                <GridPreview />
-                      }
-                    </Box>
-                </Container>
-              {/* </Switch> */}
-            </Router>
+            <SignDialog />
+            <AccountSettings />
+            <Container className={'animated fadeInHeader'} maxWidth='md'>
+              <Header />
+              <Box py={2}>
+                {
+                  (this.props.gridPreviewApiCategory === "likes" || this.props.gridPreviewApiCategory === "watchlist")
+                    ?
+                    <UserData />
+                      :
+                      (this.props.gridPreviewApiCategory === "" || this.props.gridPreviewApiType === "")
+                        ?
+                        <Home />
+                          :
+                          <GridPreview />
+                }
+              </Box>
+            </Container>
           </ThemeProvider>
       </React.Fragment>
     );

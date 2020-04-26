@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -11,7 +11,7 @@ import Search from '../Search/Search';
 import AccountMenu from '../AccountMenu/AccountMenu';
 
 // Material UI Components
-import { makeStyles, Paper, Toolbar, Hidden, IconButton, Box, Fade, Button, Icon} from '@material-ui/core';
+import { makeStyles, Paper, Toolbar, Hidden, IconButton, Box, Button} from '@material-ui/core';
 
 // Icons
 import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
@@ -21,8 +21,11 @@ import ArrowDropDownRoundedIcon from '@material-ui/icons/ArrowDropDownRounded';
 
 // Material UI Custom Component Style
 const useStyles = makeStyles((theme) => ({
+    Paper: {
+        background: 'transparent',
+    },
     Button : {
-        color: theme.palette.text.hint,
+        color: theme.palette.text.secondary,
         transition: '0.4s ease-in-out',
         background: theme.palette.action.hover,
         '&:hover': {
@@ -50,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const Header = ( {user, setOpenSignDialog, setOpenSearchDialog} ) => {
+const Header = ( {user, setOpenSearchDialog} ) => {
     const Style = useStyles();
 
     // Menu Drawer State
@@ -63,28 +66,33 @@ const Header = ( {user, setOpenSignDialog, setOpenSearchDialog} ) => {
     const popperID = openPopper ? 'Account Menu' : undefined;
 
     // Menu Drawer Methods
+    // Opens Menu Drawer Component 
     const handleClickOpenMenuDrawer = (event) => {
         event.preventDefault();
         setOpenDrawer(true);
     };
 
+    // Closes Menu Drawer Component
     const handleCloseMenuDrawer = () => {
         setOpenDrawer(false);
     };
 
     // Search Dialog Methods
+    // Opens Search Dialog Component
     const handleClickOpenSearchDialog = (event) => {
         event.preventDefault();
         setOpenSearchDialog(true);
     };
 
     // Account Menu Popover Methods
+    // Opens Account Menu Popover Component
     const handleClickOpenAccountMenuPopover = (event) => {
         event.preventDefault();
         setAnchorEl(event.currentTarget);
         setOpenPopper(true);
     };
     
+    // Closes Account Menu Popover Component
     const handleCloseAccountMenuPopover = () => {
         setAnchorEl(null);
         setOpenPopper(false);
@@ -92,7 +100,7 @@ const Header = ( {user, setOpenSignDialog, setOpenSearchDialog} ) => {
     
     return (
         <React.Fragment>
-            <Paper elevation={0} >
+            <Paper className={Style.Paper} elevation={0}>
                 <Toolbar disableGutters>
                     <Hidden smUp>
                         <IconButton aria-label="Menu" className={(openDrawer === true) ? Style.ButtonActive : Style.Button} disableRipple edge="start" onClick={(event) => handleClickOpenMenuDrawer(event)}>
@@ -153,7 +161,6 @@ const mapStateToProps = (state) => {
 // Sending some data to an action
 const matchDispatchToProps = (dispatch) => {
     return bindActionCreators({
-        setOpenSignDialog: appActions.setOpenSignDialog,
         setOpenSearchDialog: appActions.setOpenSearchDialog,
     }, dispatch);
 }

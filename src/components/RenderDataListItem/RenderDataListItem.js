@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import * as appActions from '../../actions/AppAction';
 
 // Material UI Components
-import { makeStyles, Grid, Card, CardActionArea, CardMedia, Button, CardContent, CardActions, IconButton, Typography, Box} from '@material-ui/core';
+import { makeStyles, Button, Box, Grid, Card, CardActionArea, CardMedia, CardContent, Typography, CardActions, IconButton} from '@material-ui/core';
 
 // Icons
 import StarRoundedIcon from '@material-ui/icons/StarRounded';
@@ -40,6 +40,9 @@ const useStyles = makeStyles((theme) => ({
         '&:hover': {
             filter: 'brightness(50%)',
         }
+    },
+    Content: {
+        backgroundColor: 'transparent',
     },
     Rating: {
         display: 'flex',
@@ -91,6 +94,7 @@ const RenderDataListItem = (props) => {
     const Style = useStyles();
     const data = props.typeData || [];
     
+    // This method will get the date and cut it and return only the year
     const handleGetDate = (date) => {
         if(date === undefined){
             return
@@ -102,8 +106,8 @@ const RenderDataListItem = (props) => {
         }
     }
 
+    // This method will update the users & user state and local storage
     const handleUpdateState = (users, user) => {
-        // Setting user in local storage
         localStorage.setItem('users', JSON.stringify(users));
         localStorage.setItem('user', JSON.stringify(user));
 
@@ -111,7 +115,11 @@ const RenderDataListItem = (props) => {
         props.setUser(user);
     }
 
-    // Grid Item Methods
+    /* 
+        This method will check whether array passed contains the item that was clicked on,
+        If so it will remove the item, if not it will add the item depending if its likes or watchlist
+        and if it is movie or tv
+    */
     const addRemoveList = (users, user, item, array, category, type) => {
         let check = false;
 
@@ -173,6 +181,7 @@ const RenderDataListItem = (props) => {
         }
     }
 
+    // This method will be called whenever a user clicks on the heart of any item 
     const handleLikeMovie = (item, category) => {
         const users = [...props.users];
         const user = {...props.user};
@@ -181,6 +190,7 @@ const RenderDataListItem = (props) => {
         addRemoveList(users, user, item, newLikedArray, category, 'likes')
     }
 
+    // This method will be called whenever a user clicks on the watchlist button of any item
     const handleAddToWatchlist = (item, category) => {
         const users = [...props.users];
         const user = {...props.user};
@@ -267,7 +277,7 @@ const RenderDataListItem = (props) => {
                                                 image={`https://image.tmdb.org/t/p/w500/${item.poster_path}`}
                                             />
                                         </CardActionArea>
-                                        <CardContent>
+                                        <CardContent className={Style.Content}>
                                             <Typography className={Style.Rating} variant="h6">
                                                 <StarRoundedIcon />
                                                 <span>
@@ -281,21 +291,15 @@ const RenderDataListItem = (props) => {
                                                 {(props.category === 'tv') ? `(${handleGetDate(item.first_air_date)})` : (props.category === 'movie') ? `(${handleGetDate(item.release_date)})` : ''}
                                             </Typography>
                                         </CardContent>
-                                        <CardActions disableSpacing>
+                                        <CardActions className={Style.Content} disableSpacing>
                                             <IconButton aria-label='Like' className={Style.LikeButton} disableRipple onClick={() => handleLikeMovie(item, props.category)} disabled={props.user.access === 'guest' ? true : false}>
                                                 {
-                                                    (props.gridPreviewApiCategory === '' || props.gridPreviewApiCategory === undefined)
-                                                        ? null
-                                                            :
-                                                            renderLike(item, props.category)
+                                                    renderLike(item, props.category)
                                                 }
                                             </IconButton>
                                             <Box mx={0.25} />
                                             {
-                                                (props.gridPreviewApiCategory === '' || props.gridPreviewApiCategory === undefined)
-                                                    ? null
-                                                        :
-                                                        renderWatchlist(item, props.category)
+                                                renderWatchlist(item, props.category)
                                             }
                                         </CardActions>
                                     </Card>

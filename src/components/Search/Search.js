@@ -9,7 +9,8 @@ import * as appActions from '../../actions/AppAction';
 import RenderDataListItem from '../RenderDataListItem/RenderDataListItem'
 
 // Material UI Components
-import { makeStyles, Dialog, Slide, Container, Box, Grid, TextField, Button, FormControl, Input, InputAdornment, Typography, DialogTitle, MenuItem, Hidden} from '@material-ui/core';
+import { makeStyles, Dialog, Slide, DialogTitle, Button, Container, Box, Grid, Typography, Input, FormControl, InputAdornment, Hidden, TextField, MenuItem} from '@material-ui/core';
+import Pagination from "material-ui-flat-pagination";
 
 // Icons
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
@@ -17,25 +18,22 @@ import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
 
 // Material UI Custom Component Style
 const useStyles = makeStyles((theme) => ({
-    Dialog: {
-        backgroundColor: theme.palette.background.paper,
-    },
     DialogTitle: {
         padding: theme.spacing(2),
     },
     Button : {
-        borderRadius: theme.shape.borderRadius,
-        color: theme.palette.text.hint,
+        color: theme.palette.text.secondary,
         transition: '0.4s ease-in-out',
+        borderRadius: theme.shape.borderRadius,
+        background: theme.palette.action.hover,
         '&:hover': {
-            background: theme.palette.action.hover,
+            background: theme.palette.action.focus,
             color: theme.palette.text.primary
         }
     },
-    ButtonContent: {
-        display: 'flex',
-        alignItems: 'center',
-        lineHeight: 'normal'
+    Container: {
+        margin: theme.spacing(2, 0),
+        padding: theme.spacing(1, 0),
     },
     Search: {
         borderRadius: theme.shape.borderRadius,
@@ -58,13 +56,6 @@ const useStyles = makeStyles((theme) => ({
         border: `2px solid ${theme.palette.primary.main}`,
         color: theme.palette.text.primary
     },
-    Header: {
-        '& span': {
-            fontSize: [[theme.typography.h6.fontSize], '!important'],
-            fontWeight: [[theme.typography.fontWeightMedium], '!important'],
-            textTransform: 'uppercase',
-        }
-    },
     Hidden: {
         opacity: 0,
         transition: 'opacity 0.4s ease-in-out',
@@ -73,44 +64,13 @@ const useStyles = makeStyles((theme) => ({
         opacity: 1,
         transition: 'opacity 0.4s ease-in-out',
     },
-    Poster: {
-        width: '100%',
-        borderRadius: theme.shape.borderRadius,
-    },
-    Rating: {
+    ButtonContent: {
         display: 'flex',
         alignItems: 'center',
-        lineHeight: 'normal',
-        '& svg': {
-            color: theme.palette.warning.main,
-        }
+        lineHeight: 'normal'
     },
-    SortButton: {
-        boxShadow: 'none',
-        borderRadius: '25px',
-        
-        '&:hover': {
-            boxShadow: 'none',
-        }
-    },
-    LikeButton: {
-        borderRadius: theme.shape.borderRadius,
-        boxShadow: 'none',
-        
-        '&:hover': {
-            boxShadow: 'none',
-        }
-    },
-    WatchlistButton: {
-        boxShadow: 'none',
-        borderRadius: theme.shape.borderRadius,
-        color: theme.palette.text.hint,
-        transition: '0.4s ease-in-out',
-        '&:hover': {
-            boxShadow: 'none',
-            background: theme.palette.primary.main,
-            color: theme.palette.common.white
-        }
+    Margin: {
+        margin: theme.spacing(2, 0)
     },
 }));
 
@@ -156,22 +116,31 @@ const Search = (props) => {
     const [showValue, setShowValue] = useState('movie'); 
     const [showChanged, setShowChanged] = useState(false); 
     
-    // Search Data
+    // Search Data State
     const [searchMovieData, setSearchMovieData] = useState({}); 
     const [searchTVData, setSearchTVData] = useState({}); 
     const [searchResultsNumber, setSearchResultsNumber] = useState('0'); 
     const [searchPageNumber, setSearchPageNumber] = useState(0); 
 
+    // Data Page State
+    const [currentPage, setCurrentPage] = useState(1); 
+    const [currentOffset, setCurrentOffset] = useState(0); 
+
+    // This method will close the Search component
     const handleClickCloseSearchDialog = () => {
         props.setOpenSearchDialog(false);
     };
     
     // Search Bar Methods
+    // This method will save whatever the user types in the text field
     const handleSearchChange = (event) => {
         event.preventDefault();
+        setCurrentPage(1);
+        setCurrentOffset(0);
         setSearchValue(event.target.value);
     }
 
+    // This method will set the state of searchEntered to true whenever the user presses the key "Enter"
     const handleClickSearch = (event) => {
         if(event.key === "Enter"){
             setSearchEntered(true);
@@ -179,12 +148,36 @@ const Search = (props) => {
     }
 
     // Show Select Methods
+    // This method will save whatever the user chooses from the select
     const handleShowChange = (event) => {
         event.preventDefault();
         setShowValue(event.target.value);
         setShowChanged(true);
     }
 
+    // Data Page Methods
+    const handleClickChangePage = (event, offset, next) => {
+        const key = 'c287015949cec13fb17a26e50b4f054a';
+
+        event.preventDefault();
+
+        setCurrentOffset(offset);
+        setCurrentPage(next);
+
+        fetch(`https://api.themoviedb.org/3/search/${showValue}?query=${searchValue}&api_key=${key}&language=en-US&&page=${next}&include_adult=false`)
+            .then(response => response.json())
+            .then(json => {
+                if(showValue === 'movie'){
+                    setSearchMovieData(json);
+                }else{
+                    setSearchTVData(json);
+                }
+                return;
+            })
+            .catch(error => console.log(error));  
+    }
+
+    // This method will fetch the api
     useEffect(() => {
         const key = 'c287015949cec13fb17a26e50b4f054a';
 
@@ -196,7 +189,7 @@ const Search = (props) => {
             setSearchPageNumber(0);
         }
         else if(searchEntered === true || showChanged === true){
-            fetch(`https://api.themoviedb.org/3/search/${showValue}?query=${searchValue}&api_key=${key}&language=en-US&include_adult=false`)
+            fetch(`https://api.themoviedb.org/3/search/${showValue}?query=${searchValue}&api_key=${key}&language=en-US&&page=${currentPage}&include_adult=false`)
                 .then(response => response.json())
                 .then(json => {
                     if(showValue === 'movie'){
@@ -213,7 +206,7 @@ const Search = (props) => {
         } else {
             return
         }
-    }, [searchEntered, showChanged, searchValue, showValue])
+    }, [searchEntered, showChanged, searchValue, showValue, currentPage])
 
     return (
         <Dialog
@@ -265,7 +258,7 @@ const Search = (props) => {
                                 />
                             </FormControl>
                         </Grid>
-                        <Box my={1.5} />
+                        <Box my={2} />
                         <Grid item container direction="row" justify="space-between" alignItems="center">
                             <Grid item sm={6}>
                                 <Typography className={searchEntered === false ? Style.Hidden : Style.Visible} variant="body2">
@@ -291,6 +284,18 @@ const Search = (props) => {
                                             />
                                         </Grid>
                         }
+                        <Grid item container justify="flex-end">
+                            <Pagination
+                                currentPageColor="primary"
+                                otherPageColor="default"
+                                className={searchEntered === false ? `${Style.Margin} ${Style.Hidden}` : `${Style.Margin} ${Style.Visible}`}
+                                disableRipple
+                                limit={5}
+                                offset={currentOffset}
+                                total={searchPageNumber || 10}
+                                onClick={(event, offset, page) => handleClickChangePage(event, offset, page)}
+                            />
+                        </Grid>
                     </Grid>
                 </Box>
             </Container>

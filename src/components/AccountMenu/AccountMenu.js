@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-// import { bindActionCreators } from 'redux';
+import { bindActionCreators } from 'redux';
 
 // Actions
-// import * as actions from '../../actions/SignDialog';
+import * as appActions from '../../actions/AppAction';
 
 // Material UI Components
 import { makeStyles, Popover, Grow, Hidden, List, ListItem, ListItemText} from '@material-ui/core';
@@ -18,32 +18,24 @@ const useStyles = makeStyles((theme) => ({
         }
     },
     Signout : {
-        background: theme.palette.error.main, 
-        color: theme.palette.common.white,
-
+        color: theme.palette.error.main, 
         '&:hover': {
-            background: theme.palette.error.main, 
-            color: theme.palette.common.white,
+            color: theme.palette.error.main, 
         }
     },
 }));
 
-const ListItems = ({Signout}) => {
+const ListItems = ({props, Signout}) => {
     return(
         <React.Fragment>
-            <ListItem button>
+            <ListItem button onClick={() => {props.setGridPreviewApiCategory('likes'); props.handleClosePopover()}} disabled={props.user.access === 'guest' ? true : false}>
                 <ListItemText
                     primary="Your Likes"
                 />
             </ListItem>
-            <ListItem button>
+            <ListItem button onClick={() => {props.setGridPreviewApiCategory('watchlist'); props.handleClosePopover()}} disabled={props.user.access === 'guest' ? true : false}>
                 <ListItemText
                     primary="Your Watchlist"
-                />
-            </ListItem>
-            <ListItem button>
-                <ListItemText
-                    primary="Your Ratings"
                 />
             </ListItem>
             <ListItem button>
@@ -51,7 +43,7 @@ const ListItems = ({Signout}) => {
                     primary="Account Settings"
                 />
             </ListItem>
-            <ListItem className={Signout} button>
+            <ListItem className={Signout} button onClick={() => {props.setOpenSignDialog(true); props.handleClosePopover()}}>
                 <ListItemText
                     primary="Sign Out"
                 />
@@ -60,13 +52,13 @@ const ListItems = ({Signout}) => {
     );
 }
 
-export default function AccountMenu( {anchorEl, openPopper, popperID, user, handleClosePopover} ) {
+const AccountMenu = (props) =>  {
     const Style = useStyles();
 
     return (
         <Popover
-            id={popperID}
-            anchorEl={anchorEl}
+            id={props.popperID}
+            anchorEl={props.anchorEl}
             anchorOrigin={{
                 vertical: 'bottom',
                 horizontal: 'right',
@@ -76,8 +68,8 @@ export default function AccountMenu( {anchorEl, openPopper, popperID, user, hand
                 horizontal: 'right',
             }}
             elevation={2}
-            open={openPopper}
-            onClose={handleClosePopover}
+            open={props.openPopper}
+            onClose={props.handleClosePopover}
             TransitionComponent={Grow}
             transitionDuration={750}
         >
@@ -87,18 +79,18 @@ export default function AccountMenu( {anchorEl, openPopper, popperID, user, hand
                         <ListItem divider>
                             <ListItemText
                                 className={Style.Header}
-                                primary={user.username}
+                                primary={props.user.username}
                             />
                         </ListItem>
                         {
-                            <ListItems Signout={Style.Signout} />
+                            <ListItems props={props} Signout={Style.Signout} />
                         } 
                     </List>
                 </Hidden>
                 <Hidden xsDown>
                     <List disablePadding>
                         {
-                            <ListItems Signout={Style.Signout} />
+                            <ListItems props={props} Signout={Style.Signout} />
                         } 
                     </List>
                 </Hidden>
@@ -106,3 +98,20 @@ export default function AccountMenu( {anchorEl, openPopper, popperID, user, hand
         </Popover>
     )
 }
+
+// Fetching state from store
+const mapStateToProps = (state) => {
+    return{
+        users: state.app.users
+    };
+};
+
+// Sending some data to an action
+const matchDispatchToProps = (dispatch) => {
+    return bindActionCreators({
+        setOpenSignDialog: appActions.setOpenSignDialog,
+        setGridPreviewApiCategory: appActions.setGridPreviewApiCategory,
+    }, dispatch);
+}
+
+export default connect(mapStateToProps, matchDispatchToProps)(AccountMenu);

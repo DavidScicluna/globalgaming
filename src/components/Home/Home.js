@@ -1,14 +1,12 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 // Actions
 import * as appActions from '../../actions/AppAction';
 
-// Components
-
 // Material UI Components
-import { makeStyles, Grid, Paper, Toolbar, Box, IconButton, Button, Typography, Hidden, } from '@material-ui/core';
+import { makeStyles, Grid, Typography, Box, Button} from '@material-ui/core';
 
 // Icons
 import ArrowRightAltIcon from '@material-ui/icons/ArrowRightAlt';
@@ -16,12 +14,6 @@ import ArrowRightAltIcon from '@material-ui/icons/ArrowRightAlt';
 // Material UI Custom Component Style
 const useStyles = makeStyles((theme) => ({
     '@media (min-width: 1024px)': {
-        Title: {
-            fontSize: theme.typography.h5.fontSize
-        },
-        Year: {
-            fontSize: theme.typography.h6.fontSize
-        },
         TrendingItem: {
             cursor: 'pointer',
             width: '342px'
@@ -39,7 +31,6 @@ const useStyles = makeStyles((theme) => ({
         width: '342px'
     },
     Poster: {
-        // width: '100%',
         borderRadius: theme.shape.borderRadius,
         transition: '0.4s ease-in-out',
 
@@ -49,8 +40,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const RenderTrendingApiData = ({Style, header, data, dataName, category, handleOpenPage}) => {
+const RenderHomeApiData = ({Style, header, data, dataName, category, handleOpenPage}) => {
     const newData = (dataName === 'Trending') ? data.results : data;
+
     return(
         <React.Fragment>
             <Grid item container direction="row" alignItems="center" justify="flex-start">
@@ -94,10 +86,10 @@ const RenderTrendingApiData = ({Style, header, data, dataName, category, handleO
     );
 }
 
-
 const Home = (props) => {
     const Style = useStyles();
 
+    // This method will open the GridPreview component with the data the user chooses
     const handleOpenPage = (category, type, title) => {
         props.setGridPreviewApiCategory(category);
         props.setGridPreviewApiType(type);
@@ -106,9 +98,9 @@ const Home = (props) => {
 
     return (
         <Grid container direction="column">
-            <RenderTrendingApiData Style={Style} header={'Trending'} data={props.trending} dataName={'Trending'} category={''} handleOpenPage={handleOpenPage} />
-            <RenderTrendingApiData Style={Style} header={'Popular Movies'} data={props.moviePopular} dataName={'Popular'} category={'movie'} handleOpenPage={handleOpenPage} />
-            <RenderTrendingApiData Style={Style} header={'Popular TV'} data={props.tvPopular} dataName={'Popular'} category={'tv'} handleOpenPage={handleOpenPage} />
+            <RenderHomeApiData Style={Style} header={'Trending'} data={props.trending} dataName={'Trending'} category={''} handleOpenPage={handleOpenPage} />
+            <RenderHomeApiData Style={Style} header={'Popular Movies'} data={props.moviePopular} dataName={'Popular'} category={'movie'} handleOpenPage={handleOpenPage} />
+            <RenderHomeApiData Style={Style} header={'Popular TV'} data={props.tvPopular} dataName={'Popular'} category={'tv'} handleOpenPage={handleOpenPage} />
         </Grid>
     )
 }
