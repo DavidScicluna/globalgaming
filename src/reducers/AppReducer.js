@@ -4,7 +4,7 @@ const getUsers = JSON.parse(localStorage.getItem("users") || "[]");
 const getUser = JSON.parse(localStorage.getItem("users") || "{}");
 
 const initialState = {
-    openSignDialog: false,
+    openSignDialog: true,
     openSearchDialog: false,
     openCustomizeDialog: false,
     gridPreviewApiCategory: '',
