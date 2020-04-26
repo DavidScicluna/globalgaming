@@ -8,6 +8,7 @@ const initialState = {
     openSearchDialog: false,
     gridPreviewApiCategory: '',
     gridPreviewApiType: '',
+    gridPreviewApiTitle: '',
     users: getUsers,
     user: getUser
 }
@@ -33,6 +34,11 @@ const appReducer = (state = initialState, action) => {
             return {
                 ...state,
                 gridPreviewApiType: action.payload,
+            }
+        case actionType.SET_GRIDPREVIEWAPITITLE:
+            return {
+                ...state,
+                gridPreviewApiTitle: action.payload,
             }
         case actionType.SET_USERS:
             return {

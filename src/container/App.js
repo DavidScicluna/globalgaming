@@ -111,8 +111,10 @@ class App extends React.Component{
                 <Container className={this.props.openSignDialog === true || this.props.openSearchDialog === true ? 'animated fadeOutHeader' : 'animated fadeInHeader'} maxWidth='md'>
                   <Header />
                   <Route exact path="/">
-                    <Home />
-                    <GridPreview />
+                    <Box py={2}>
+                      <Home />
+                      <GridPreview />
+                    </Box>
                   </Route>
                 </Container>
               {/* </Switch> */}

@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const Menu = ( {openDrawer, gridPreviewApiCategory, gridPreviewApiType, user, handleCloseDrawer, setOpenSearchDialog, setGridPreviewApiCategory, setGridPreviewApiType} ) => {
+const Menu = ( {openDrawer, gridPreviewApiCategory, gridPreviewApiType, user, handleCloseDrawer, setOpenSearchDialog, setGridPreviewApiCategory, setGridPreviewApiType, setGridPreviewApiTitle} ) => {
     const Style = useStyles();
 
     // Menu List Items State
@@ -135,9 +135,10 @@ const Menu = ( {openDrawer, gridPreviewApiCategory, gridPreviewApiType, user, ha
         setOpenTV(!openTV);
     };
 
-    const handleOpenGridPreview = (category, type) => {
+    const handleOpenGridPreview = (category, item) => {
         setGridPreviewApiCategory(category);
-        setGridPreviewApiType(type);
+        setGridPreviewApiType(item.type);
+        setGridPreviewApiTitle(item.title);
         handleCloseDrawer();
     }
 
@@ -191,7 +192,7 @@ const Menu = ( {openDrawer, gridPreviewApiCategory, gridPreviewApiType, user, ha
                                     {
                                         movieTypes.map(item => {
                                             return(
-                                                <ListItem key={item.id} button className={gridPreviewApiCategory === 'movie' && gridPreviewApiType === item.type ? `${Style.Nested} ${Style.ButtonActive}` : `${Style.Nested} ${Style.Button}`} onClick={() => handleOpenGridPreview('movie', item.type)}>
+                                                <ListItem key={item.id} button className={gridPreviewApiCategory === 'movie' && gridPreviewApiType === item.type ? `${Style.Nested} ${Style.ButtonActive}` : `${Style.Nested} ${Style.Button}`} onClick={() => handleOpenGridPreview('movie', item)}>
                                                     <ListItemText primary={item.title} />
                                                 </ListItem>
                                             );
@@ -211,7 +212,7 @@ const Menu = ( {openDrawer, gridPreviewApiCategory, gridPreviewApiType, user, ha
                                     {
                                         tvTypes.map(item => {
                                             return(
-                                                <ListItem key={item.id} button className={gridPreviewApiCategory === 'tv' && gridPreviewApiType === item.type ? `${Style.Nested} ${Style.ButtonActive}` : `${Style.Nested} ${Style.Button}`} onClick={() => handleOpenGridPreview('tv', item.type)}>
+                                                <ListItem key={item.id} button className={gridPreviewApiCategory === 'tv' && gridPreviewApiType === item.type ? `${Style.Nested} ${Style.ButtonActive}` : `${Style.Nested} ${Style.Button}`} onClick={() => handleOpenGridPreview('tv', item)}>
                                                     <ListItemText primary={item.title} />
                                                 </ListItem>
                                             );
@@ -264,6 +265,7 @@ const matchDispatchToProps = (dispatch) => {
         setOpenSearchDialog: appActions.setOpenSearchDialog,
         setGridPreviewApiCategory: appActions.setGridPreviewApiCategory,
         setGridPreviewApiType: appActions.setGridPreviewApiType,
+        setGridPreviewApiTitle: appActions.setGridPreviewApiTitle,
     }, dispatch);
 }
 

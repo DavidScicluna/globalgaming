@@ -11,8 +11,20 @@ import AddRoundedIcon from '@material-ui/icons/AddRounded';
 
 // Material UI Custom Component Style
 const useStyles = makeStyles((theme) => ({
+    '@media (min-width: 0.24px)': {
+        Rating: {
+            fontSize: theme.typography.h5.fontSize
+        },
+        Title: {
+            fontSize: theme.typography.h5.fontSize
+        },
+        Year: {
+            fontSize: theme.typography.h6.fontSize
+        },
+    },
     Container: {
         margin: theme.spacing(2, 0),
+        padding: theme.spacing(1, 0),
     },
     Poster: {
         width: '100%',
@@ -32,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
         
         '&:hover': {
             boxShadow: 'none',
+            color: theme.palette.error.main,
         }
     },
     WatchlistButton: {
@@ -46,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function RenderDataListItem( {typeData, category, genre} ) {
+export default function RenderDataListItem( {typeData, category} ) {
     const Style = useStyles();
     const data = typeData || [];
     
@@ -95,10 +108,10 @@ export default function RenderDataListItem( {typeData, category, genre} ) {
                                                     {item.vote_average}
                                                 </span>
                                             </Typography>
-                                            <Typography gutterBottom variant="h6" style={{fontWeight: '700'}}>
-                                                {(category === 'tv') ? item.original_name : (category === 'movie') ? item.original_title : ''}
+                                            <Typography className={Style.Title} gutterBottom variant="h6" style={{fontWeight: '700'}}>
+                                                {(category === 'tv') ? item.original_name : (category === 'movie') ? item.title : ''}
                                             </Typography>
-                                            <Typography color="textSecondary" variant="button">
+                                            <Typography className={Style.Year} color="textSecondary" variant="button">
                                                 {(category === 'tv') ? `(${handleGetDate(item.first_air_date)})` : (category === 'movie') ? `(${handleGetDate(item.release_date)})` : ''}
                                             </Typography>
                                         </CardContent>
