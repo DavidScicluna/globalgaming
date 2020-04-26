@@ -18,6 +18,7 @@ import RenderDataListItem from '../RenderDataListItem/RenderDataListItem'
 
 // Material UI Components
 import { makeStyles, Grid, TextField, Button, Typography, MenuItem } from '@material-ui/core';
+import Pagination from "material-ui-flat-pagination";
 
 // Icons
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
@@ -37,10 +38,14 @@ const useStyles = makeStyles((theme) => ({
         }
     },
     SortButton: {
+        margin: theme.spacing(0.25),
         boxShadow: 'none',
         borderRadius: '25px',
+        color: theme.palette.common.white,
         
         '&:hover': {
+            color: theme.palette.common.white,
+            background: theme.palette.primary.main,
             boxShadow: 'none',
         }
     },
@@ -72,15 +77,14 @@ const useStyles = makeStyles((theme) => ({
 //     })
 // }
 
-const RenderDataElements = ({props, setGenreChosen, posterStyle, StyleRating, StyleLikeButton, StyleWatchlistButton, handleLikeMovie, handleAddToWatchlist}) => {
+const RenderDataElements = ({props}) => {
     if(props.gridPreviewApiCategory === 'movie'){
-        // setGenreChosen(props.movieGenres)
         switch(props.gridPreviewApiType){
             case 'now_playing':
                 return(
                     <RenderDataListItem 
                         typeData={props.nowPlaying} 
-                        media_type={'movie'} 
+                        category={'movie'} 
                         genre={props.movieGenres}
                     />
                 );
@@ -88,7 +92,7 @@ const RenderDataElements = ({props, setGenreChosen, posterStyle, StyleRating, St
                 return(
                     <RenderDataListItem 
                         typeData={props.moviePopular} 
-                        media_type={'movie'} 
+                        category={'movie'} 
                         genre={props.movieGenres}
                     />
                 );
@@ -96,7 +100,7 @@ const RenderDataElements = ({props, setGenreChosen, posterStyle, StyleRating, St
                 return(
                     <RenderDataListItem 
                         typeData={props.movieTopRated} 
-                        media_type={'movie'} 
+                        category={'movie'} 
                         genre={props.movieGenres}
                     />
                 );
@@ -104,7 +108,7 @@ const RenderDataElements = ({props, setGenreChosen, posterStyle, StyleRating, St
                 return(
                     <RenderDataListItem 
                         typeData={props.upcoming} 
-                        media_type={'movie'} 
+                        category={'movie'} 
                         genre={props.movieGenres}
                     />
                 );
@@ -112,34 +116,33 @@ const RenderDataElements = ({props, setGenreChosen, posterStyle, StyleRating, St
                 return;
         }
     }else if(props.gridPreviewApiCategory === 'tv'){
-        // setGenreChosen(props.tvGenres)
         switch(props.gridPreviewApiType){
             case 'airing_today':
                 return(
                     <RenderDataListItem 
                         typeData={props.airingToday} 
-                        media_type={'tv'} 
+                        category={'tv'} 
                     />
                 );
             case 'on_the_air':
                 return(
                     <RenderDataListItem 
                         typeData={props.onTv} 
-                        media_type={'tv'} 
+                        category={'tv'} 
                     />
                 );
             case 'popular':
                 return(
                     <RenderDataListItem 
                         typeData={props.tvPopular} 
-                        media_type={'tv'} 
+                        category={'tv'} 
                     />
                 );
             case 'top_rated':
                 return(
                     <RenderDataListItem 
                         typeData={props.tvTopRated} 
-                        media_type={'tv'} 
+                        category={'tv'} 
                     />
                 );
             default:
@@ -155,13 +158,46 @@ const GridPreview = (props) => {
 
     // Sort Select State
     const [sortValue, setSortValue] = useState('all'); 
-    const [genreChosen, setGenreChosen] = useState([]); 
+    const [sortGroup, setSortGroup] = useState([]); 
+    
+    // Data Page State
+    const [currentPage, setCurrentPage] = useState(1); 
+    const [currentOffset, setCurrentOffset] = useState(0); 
 
     // Sort Select Methods
     const handleSortChange = (event) => {
         event.preventDefault();
         setSortValue(event.target.value);
-        // fetchApiData(searchValue, event.target.value);
+    }
+
+    const handleUpdateSort = (item) => {
+        const newSortGroup = [...sortGroup];
+
+        if(newSortGroup.includes(item) === true){
+            return
+        }else{
+            newSortGroup.push(item);
+
+            setSortValue(item.name);
+            setSortGroup(newSortGroup);
+        }
+    }
+
+    const handleRemoveSort = (removeItem) => {
+        const newSortGroup = [...sortGroup];
+
+        const updatedSortGroup = newSortGroup.filter(item => {return item.id !== removeItem.id});
+
+        setSortGroup(updatedSortGroup);
+    }
+
+    // Data Page Methods
+    const handleClickChangePage = (event, offset, next) => {
+        event.preventDefault();
+        window.scrollTo(0, 0)
+
+        setCurrentOffset(offset);
+        setCurrentPage(next);
     }
 
     useEffect(() => {
@@ -187,12 +223,7 @@ const GridPreview = (props) => {
         
             types.forEach((item) => {
                 if(item.type === type){
-                    fetchApi(`https://api.themoviedb.org/3/movie/${item.type}?api_key=${key}&language=en-US`, item.action);
-                    if(Object.keys(props.movieGenres).length === 0){
-                        fetchApi(`https://api.themoviedb.org/3/genre/movie/list?api_key=${key}&language=en-US`, props.fetchApiMovieGenres);
-                    }else{
-                        return
-                    }
+                    fetchApi(`https://api.themoviedb.org/3/movie/${item.type}?api_key=${key}&language=en-US&page=${currentPage}`, item.action);
                 }else{
                     return;
                 }
@@ -221,13 +252,7 @@ const GridPreview = (props) => {
     
             types.forEach((item) => {
                 if(item.type === type){
-                    fetchApi(`https://api.themoviedb.org/3/tv/${item.type}?api_key=${key}&language=en-US`, item.action);
-                    if(Object.keys(props.tvGenres).length === 0){
-                        fetchApi(`https://api.themoviedb.org/3/genre/tv/list?api_key=${key}&language=en-US`, props.fetchApiTVGenres);
-                        setGenreChosen(props.tvGenres)
-                    }else{
-                        return
-                    }
+                    fetchApi(`https://api.themoviedb.org/3/tv/${item.type}?api_key=${key}&language=en-US&page=${currentPage}`, item.action);
                 }else{
                     return;
                 }
@@ -242,19 +267,26 @@ const GridPreview = (props) => {
             fetchTvApiData(props.gridPreviewApiType, key);
         }
     }, [
-        props.gridPreviewApiCategory, props.gridPreviewApiType, props.fetchApiMovieGenres, props.fetchApiMovieNowPlaying, props.fetchApiMoviePopular, props.fetchApiMovieTopRated, props.fetchApiMovieUpcoming,
+        currentPage, props.gridPreviewApiCategory, props.gridPreviewApiType, props.fetchApiMovieGenres, props.fetchApiMovieNowPlaying, props.fetchApiMoviePopular, props.fetchApiMovieTopRated, props.fetchApiMovieUpcoming,
         props.fetchApiTVAiringToday, props.fetchApiTVGenres, props.fetchApiTVOnTv, props.fetchApiTVPopular, props.fetchApiTVTopRated, props.movieGenres, props.tvGenres
     ])
 
     return (
         <Grid container direction="column">
             <Grid className={Style.Margin} item container direction="row" justify="space-between">
-                <Grid item>
-                    <Button className={`${Style.Button} ${Style.SortButton}`} disableRipple endIcon={<CloseRoundedIcon />} variant="contained">
-                        Primary
-                    </Button>
+                <Grid item sm={8} container direction="row" justify='flex-start' alignItems="center">
+                    {
+                        sortGroup.map(item => {
+                            return(
+                                <Button key={item.id} className={`${Style.Button} ${Style.SortButton}`} color="primary" disableRipple endIcon={<CloseRoundedIcon />} variant="contained" onMouseDown={() => handleRemoveSort(item)}>
+                                    {item.name}
+                                </Button>
+                            );
+
+                        })
+                    }
                 </Grid>
-                <Grid item sm={6} container direction="row" justify='flex-end' alignItems="center" spacing={1}>
+                <Grid item sm={4} container direction="row" justify='flex-end' alignItems="center" spacing={1}>
                     <Grid item>
                         <Typography variant="button">
                             Sort by:
@@ -265,26 +297,36 @@ const GridPreview = (props) => {
                             aria-label="Show Items Select"
                             color="primary"
                             fullWidth
-                            onChange={(event) => handleSortChange(event)}
+                            onChange={handleSortChange}
                             select
                             style={{paddingRight: 0}}
                             value={sortValue}
                             >
-                                <MenuItem value={'all'}>
+                                <MenuItem value={'all'} onMouseDown={() => {setSortGroup([]); setSortValue('all')}}>
                                     All
                                 </MenuItem>
-                                {/* {
+                                {
                                     (props.gridPreviewApiCategory === '' || props.gridPreviewApiType === '')
                                         ? null
                                             :  
-                                            genreChosen.map(item => {
-                                                return(
-                                                    <MenuItem key={item.id} value={item.id}>
-                                                        {item.name}
-                                                    </MenuItem>
-                                                );
-                                            })
-                                } */}
+                                            props.gridPreviewApiCategory === 'movie'
+                                                ?  
+                                                props.movieGenres.map(item => {
+                                                    return(
+                                                        <MenuItem key={item.id} value={item.name} onMouseDown={() => handleUpdateSort(item)} disabled={sortGroup.includes(item) === true ? true : false}>
+                                                            {item.name}
+                                                        </MenuItem>
+                                                    );
+                                                })
+                                                    :
+                                                    props.tvGenres.map(item => {
+                                                        return(
+                                                            <MenuItem key={item.id} value={item.name} onMouseDown={() => handleUpdateSort(item)} disabled={sortGroup.includes(item) === true ? true : false}>
+                                                                {item.name}
+                                                            </MenuItem>
+                                                        );
+                                                    })
+                                }
                         </TextField>
                     </Grid>
                 </Grid>
@@ -296,10 +338,21 @@ const GridPreview = (props) => {
                         <Grid item container alignItems="flex-start" justify="flex-start" wrap="wrap" spacing={2}>
                             <RenderDataElements 
                                 props={props} 
-                                setGenreChosen={setGenreChosen} 
                             />
                         </Grid>
             }
+            <Grid item container justify="flex-end">
+                <Pagination
+                    currentPageColor="primary"
+                    otherPageColor="default"
+                    className={Style.Margin}
+                    disableRipple
+                    limit={5}
+                    offset={currentOffset}
+                    total={10}
+                    onClick={(event, offset, page) => handleClickChangePage(event, offset, page)}
+                />
+            </Grid>
         </Grid>
     )
 }
@@ -337,13 +390,11 @@ const mapStateToProps = (state) => {
         fetchApiMoviePopular: movieActions.fetchApiMoviePopular,
         fetchApiMovieTopRated: movieActions.fetchApiMovieTopRated,
         fetchApiMovieUpcoming: movieActions.fetchApiMovieUpcoming,
-        fetchApiMovieGenres: movieActions.fetchApiMovieGenres,
         // TV Actions
         fetchApiTVAiringToday: tvActions.fetchApiTVAiringToday,
         fetchApiTVOnTv: tvActions.fetchApiTVOnTv,
         fetchApiTVPopular: tvActions.fetchApiTVPopular,
         fetchApiTVTopRated: tvActions.fetchApiTVTopRated,
-        fetchApiTVGenres: tvActions.fetchApiTVGenres,
       }, dispatch);
   }
   

@@ -144,8 +144,6 @@ const ShowSelectContent = ({justify, handleShowChange, showValue}) => {
 const Search = (props) => {
     const Style = useStyles();
 
-    const [gridAnimation, setGridAnimation] = useState(true); 
-
     // Search Bar State
     const [searchFocused, setSearchFocused] = useState(false); 
     const [searchEntered, setSearchEntered] = useState(false); 
@@ -153,6 +151,7 @@ const Search = (props) => {
     
     // Show Select State
     const [showValue, setShowValue] = useState('movie'); 
+    const [showChanged, setShowChanged] = useState(false); 
     
     // Search Data
     const [searchMovieData, setSearchMovieData] = useState({}); 
@@ -180,17 +179,23 @@ const Search = (props) => {
     const handleShowChange = (event) => {
         event.preventDefault();
         setShowValue(event.target.value);
+        setShowChanged(true);
     }
 
     useEffect(() => {
         const key = 'c287015949cec13fb17a26e50b4f054a';
 
-        if(searchEntered === true){
-            console.log('Enter');
+        if(searchValue === ''){
+            setSearchEntered(false);
+            setSearchMovieData({});
+            setSearchTVData({});
+            setSearchResultsNumber('0');
+            setSearchPageNumber(0);
+        }
+        else if(searchEntered === true || showChanged === true){
             fetch(`https://api.themoviedb.org/3/search/${showValue}?query=${searchValue}&api_key=${key}&language=en-US&include_adult=false`)
                 .then(response => response.json())
                 .then(json => {
-                    console.log(json)
                     if(showValue === 'movie'){
                         setSearchMovieData(json);
                     }else{
@@ -198,28 +203,14 @@ const Search = (props) => {
                     }
                     setSearchResultsNumber(String(json.total_results));
                     setSearchPageNumber(String(json.total_pages));
+                    setShowChanged(false);
                     return;
                 })
                 .catch(error => console.log(error));  
         } else {
             return
         }
-
-        if(searchValue === ''){
-            setGridAnimation(false);
-            
-            setTimeout(() => {
-                setSearchEntered(false);
-                setSearchMovieData({});
-                setSearchTVData({});
-                setSearchResultsNumber('0');
-                setSearchPageNumber(0);
-            }, 1000);
-        }
-
-        // return () => {
-        // }
-    }, [searchEntered, searchValue, showValue])
+    }, [searchEntered, showChanged, searchValue, showValue])
 
     return (
         <Dialog
@@ -295,7 +286,7 @@ const Search = (props) => {
                                         <Grid item container alignItems="flex-start" justify="flex-start" wrap="wrap" spacing={2}>
                                             <RenderDataListItem 
                                                 typeData={showValue === 'movie' ? searchMovieData.results : searchTVData.results } 
-                                                media_type={showValue}
+                                                category={showValue}
                                             />
                                         </Grid>
                         }

@@ -72,10 +72,28 @@ class App extends React.Component{
     const key = 'c287015949cec13fb17a26e50b4f054a';
 
     // this.fetchTrendingApiData(key);
+    this.fetchTrendingApiGenres(key);
   }
 
   fetchTrendingApiData = (key) => {
       fetchApi(`https://api.themoviedb.org/3/trending/all/week?&api_key=${key}`, this.props.fetchApiTrending);
+  }
+
+  fetchTrendingApiGenres = (key) => {
+    const types = [
+      {
+        action: this.props.fetchApiMovieGenres,
+        type: 'movie',
+      },
+      {
+        action: this.props.fetchApiTVGenres,
+        type: 'tv',
+      },
+    ]
+
+    types.forEach(item => {
+      fetchApi(`https://api.themoviedb.org/3/genre/${item.type}/list?api_key=${key}&language=en-US`, item.action);
+    });
   }
 
   // static propTypes = {
@@ -121,6 +139,10 @@ const matchDispatchToProps = (dispatch) => {
     return bindActionCreators({
       // API Actions
       fetchApiTrending: apiAction.fetchApiTrending,
+      // API Movies
+      fetchApiMovieGenres: movieActions.fetchApiMovieGenres,
+      // API TV
+      fetchApiTVGenres: tvActions.fetchApiTVGenres,
     }, dispatch);
 }
 
