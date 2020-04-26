@@ -41,6 +41,11 @@ const useStyles = makeStyles((theme) => ({
     Poster: {
         // width: '100%',
         borderRadius: theme.shape.borderRadius,
+        transition: '0.4s ease-in-out',
+
+        '&:hover': {
+            filter: 'brightness(50%)',
+        }
     },
 }));
 

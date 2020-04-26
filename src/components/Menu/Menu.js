@@ -234,22 +234,18 @@ const Menu = (props) => {
 
                             <Divider className={Style.Divider} variant="inset" />
 
-                            <ListItem className={`${Style.Header} ${Style.Button}`}>
+                            <ListItem className={`${Style.Header} ${Style.Button}`} button onClick={() => {props.setGridPreviewApiCategory('liked'); props.handleCloseDrawer()}} disabled={props.user.access === 'guest' ? true : false}>
                                 <FavoriteBorderOutlinedIcon className={Style.MarginRight} />
                                 <ListItemText primary="Liked" />
                             </ListItem>
-                            <ListItem className={`${Style.Header} ${Style.Button}`}>
+                            <ListItem className={`${Style.Header} ${Style.Button}`} button onClick={() => {props.setGridPreviewApiCategory('watchlist'); props.handleCloseDrawer()}} disabled={props.user.access === 'guest' ? true : false}>
                                 <HourglassEmptyOutlinedIcon className={Style.MarginRight} />
                                 <ListItemText primary="Watchlist" />
-                            </ListItem>
-                            <ListItem className={`${Style.Header} ${Style.Button}`}>
-                                <StarBorderOutlinedIcon className={Style.MarginRight} />
-                                <ListItemText primary="Ratings" />
                             </ListItem>
 
                             <Divider className={Style.Divider} variant="inset" />
 
-                            <ListItem className={`${Style.Header} ${Style.Button}`} button onClick={(event) => {handleClickOpenCustomizeDialog(event); props.handleCloseDrawer()}}>
+                            <ListItem className={`${Style.Header} ${Style.Button}`} button onClick={(event) => {handleClickOpenCustomizeDialog(event); props.handleCloseDrawer()}} disabled={props.user.access === 'guest' ? true : false}>
                                 <ColorLensOutlinedIcon className={Style.MarginRight} />
                                 <ListItemText primary="Customize" />
                             </ListItem>
@@ -266,6 +262,7 @@ const mapStateToProps = (state) => {
     return{
         gridPreviewApiCategory: state.app.gridPreviewApiCategory,
         gridPreviewApiType: state.app.gridPreviewApiType,
+        user: state.app.user,
     };
 };
 

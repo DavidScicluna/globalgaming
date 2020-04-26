@@ -35,6 +35,11 @@ const useStyles = makeStyles((theme) => ({
     Poster: {
         width: '100%',
         borderRadius: `${theme.shape.borderRadius} ${theme.shape.borderRadius} 0 0`,
+        transition: '0.4s ease-in-out',
+
+        '&:hover': {
+            filter: 'brightness(50%)',
+        }
     },
     Rating: {
         display: 'flex',
@@ -107,9 +112,9 @@ const RenderDataListItem = (props) => {
     }
 
     // Grid Item Methods
-    const addRemoveList = (users, user, item, array, type) => {
+    const addRemoveList = (users, user, item, array, category, type) => {
         let check = false;
-        
+
         array.forEach(otherItem => {
             if(otherItem.id === item.id){
                 check = true;
@@ -124,7 +129,7 @@ const RenderDataListItem = (props) => {
 
             const updatedUser = {
                 ...user,
-                [type]: updateLikedArray
+                [type]: {...user[type], [category]: updateLikedArray}
             }
 
             const updatedUsers = users.map(item => {
@@ -148,7 +153,7 @@ const RenderDataListItem = (props) => {
     
             const updatedUser = {
                 ...user,
-                [type]: array
+                [type]: {...user[type], [category]: array}
             }
     
             const updatedUsers = users.map(item => {
@@ -168,27 +173,27 @@ const RenderDataListItem = (props) => {
         }
     }
 
-    const handleLikeMovie = (item) => {
+    const handleLikeMovie = (item, category) => {
         const users = [...props.users];
         const user = {...props.user};
-        const newLikedArray = [...user.likes];
+        const newLikedArray = [...user.likes[category]];
         
-        addRemoveList(users, user, item, newLikedArray, 'likes')
+        addRemoveList(users, user, item, newLikedArray, category, 'likes')
     }
 
-    const handleAddToWatchlist = (item) => {
+    const handleAddToWatchlist = (item, category) => {
         const users = [...props.users];
         const user = {...props.user};
-        const newWatchlistArray = [...user.watchlist];
+        const newWatchlistArray = [...user.watchlist[category]];
         
-        addRemoveList(users, user, item, newWatchlistArray, 'watchlist')
+        addRemoveList(users, user, item, newWatchlistArray, category, 'watchlist')
     }
 
     // This method renders the like button either the like or unlike button
-    const renderLike = (item) => {
+    const renderLike = (item, category) => {
         let check = false;
 
-        props.user.likes.forEach(likeItem => {
+        props.user.likes[category].forEach(likeItem => {
             if(likeItem.id === item.id){
                 check = true;
                 return
@@ -209,10 +214,10 @@ const RenderDataListItem = (props) => {
     }
 
     // This method renders the watchlist button either the remove or add watchlist
-    const renderWatchlist = (item) => {
+    const renderWatchlist = (item, category) => {
         let check = false;
 
-        props.user.watchlist.forEach(watchItem => {
+        props.user.watchlist[category].forEach(watchItem => {
             if(watchItem.id === item.id){
                 check = true;
                 return
@@ -223,7 +228,7 @@ const RenderDataListItem = (props) => {
 
         if(check === true){
             return(
-                <Button className={`${Style.WatchlistButton} ${Style.WatchlistRemoveButton}`} disableRipple variant="contained" onClick={() => handleAddToWatchlist(item)} >
+                <Button className={`${Style.WatchlistButton} ${Style.WatchlistRemoveButton}`} disableRipple variant="contained" onClick={() => handleAddToWatchlist(item, category)} disabled={props.user.access === 'guest' ? true : false}>
                     <div className={Style.ButtonContent}>
                         <RemoveRoundedIcon />
                         <Box mr={0.75} />
@@ -233,7 +238,7 @@ const RenderDataListItem = (props) => {
             )
         }else{
             return(   
-                <Button color="primary" className={Style.WatchlistButton} disableRipple variant="contained" onClick={() => handleAddToWatchlist(item)} >
+                <Button color="primary" className={Style.WatchlistButton} disableRipple variant="contained" onClick={() => handleAddToWatchlist(item, category)} disabled={props.user.access === 'guest' ? true : false}>
                     <div className={Style.ButtonContent}>
                         <AddRoundedIcon />
                         <Box mr={0.75} />
@@ -277,14 +282,20 @@ const RenderDataListItem = (props) => {
                                             </Typography>
                                         </CardContent>
                                         <CardActions disableSpacing>
-                                            <IconButton aria-label='Like' className={Style.LikeButton} disableRipple onClick={() => handleLikeMovie(item)} >
+                                            <IconButton aria-label='Like' className={Style.LikeButton} disableRipple onClick={() => handleLikeMovie(item, props.category)} disabled={props.user.access === 'guest' ? true : false}>
                                                 {
-                                                    renderLike(item)
+                                                    (props.gridPreviewApiCategory === '' || props.gridPreviewApiCategory === undefined)
+                                                        ? null
+                                                            :
+                                                            renderLike(item, props.category)
                                                 }
                                             </IconButton>
                                             <Box mx={0.25} />
                                             {
-                                                renderWatchlist(item)
+                                                (props.gridPreviewApiCategory === '' || props.gridPreviewApiCategory === undefined)
+                                                    ? null
+                                                        :
+                                                        renderWatchlist(item, props.category)
                                             }
                                         </CardActions>
                                     </Card>
@@ -300,6 +311,7 @@ const RenderDataListItem = (props) => {
 const mapStateToProps = (state) => {
     return{
         // Internal State (APP)
+        gridPreviewApiCategory: state.app.gridPreviewApiCategory,
         users: state.app.users,
         user: state.app.user,
     };

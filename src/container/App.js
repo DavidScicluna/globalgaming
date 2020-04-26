@@ -14,10 +14,11 @@ import SignDialog from '../components/SignDialog/SignDialog';
 import Customize from '../components/Customize/Customize';
 import Header from '../components/Header/Header';
 import Home from '../components/Home/Home';
+import UserData from '../components/UserData/UserData';
 import GridPreview from '../components/GridPreview/GridPreview';
 
 // Material UI Components
-import { CssBaseline, createMuiTheme, ThemeProvider, Container, Box, Fade } from '@material-ui/core';
+import { CssBaseline, createMuiTheme, ThemeProvider, Container, Box } from '@material-ui/core';
 
 // Material UI Custom Theme
 const theme = createMuiTheme({
@@ -123,21 +124,21 @@ class App extends React.Component{
               {/* <Switch> */}
                 <SignDialog />
                 <Customize />
-                <Container className={this.props.openSignDialog === true || this.props.openSearchDialog === true ? 'animated fadeOutHeader' : 'animated fadeInHeader'} maxWidth='md'>
+                <Container className={'animated fadeInHeader'} maxWidth='md'>
                   <Header />
-                  <Route exact path="/">
                     <Box py={2}>
-                      <Fade in timeout={1000}>
-                        {
-                          (this.props.gridPreviewApiCategory === "" || this.props.gridPreviewApiType === "" )
-                            ?
-                            <Home />
-                              :
-                              <GridPreview />
-                        }
-                      </Fade>
+                      {
+                        (this.props.gridPreviewApiCategory === "liked" || this.props.gridPreviewApiCategory === "watchlist")
+                          ?
+                          <UserData />
+                            :
+                            (this.props.gridPreviewApiCategory === "" || this.props.gridPreviewApiType === "")
+                              ?
+                              <Home />
+                                :
+                                <GridPreview />
+                      }
                     </Box>
-                  </Route>
                 </Container>
               {/* </Switch> */}
             </Router>

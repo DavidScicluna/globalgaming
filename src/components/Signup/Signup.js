@@ -109,9 +109,14 @@ export default function Signup( {users, handleClickDialog, handleUpdateState} ) 
                 password: password,
                 access: 'user',
                 initials: initial,
-                likes: [],
-                watchlist: [],
-                rating: [],
+                likes: {
+                    movie: [],
+                    tv: [],
+                },
+                watchlist: {
+                    movie: [],
+                    tv: [],
+                },
                 color: colors[Math.floor(Math.random() * colors.length)],
             }
 

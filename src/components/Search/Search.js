@@ -114,7 +114,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const ShowSelectContent = ({justify, handleShowChange, showValue}) => {
+export const ShowSelectContent = ({justify, handleShowChange, showValue}) => {
     return(
         <Grid item sm={6} container direction="row" justify={justify} alignItems="center" spacing={1}>
             <Grid item>

@@ -148,6 +148,14 @@ export default function Signin( {users, handleClickDialog, handleUpdateState} ) 
                 password: '',
                 access: 'guest',
                 initials: 'G',
+                likes: {
+                    movie: [],
+                    tv: [],
+                },
+                watchlist: {
+                    movie: [],
+                    tv: [],
+                },
                 color: '#757575',
             }
 
