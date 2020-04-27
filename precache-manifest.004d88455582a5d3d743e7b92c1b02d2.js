@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "e9ae083fae3487509a0521eb397a0e0e",
+    "revision": "76925e276f5e277ee4b4cf35e94dcb71",
     "url": "/globalgaming/index.html"
   },
   {
-    "revision": "a32e6d5859362f89a1b1",
+    "revision": "d6104b8fdce87de98fec",
     "url": "/globalgaming/static/css/main.f5963df5.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/globalgaming/static/js/2.5b0a34cc.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "a32e6d5859362f89a1b1",
-    "url": "/globalgaming/static/js/main.951a2455.chunk.js"
+    "revision": "d6104b8fdce87de98fec",
+    "url": "/globalgaming/static/js/main.75d1cc4b.chunk.js"
   },
   {
     "revision": "8a835dc8ba30ed98ee13",

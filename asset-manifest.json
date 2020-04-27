@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/globalgaming/static/css/main.f5963df5.chunk.css",
-    "main.js": "/globalgaming/static/js/main.951a2455.chunk.js",
-    "main.js.map": "/globalgaming/static/js/main.951a2455.chunk.js.map",
+    "main.js": "/globalgaming/static/js/main.75d1cc4b.chunk.js",
+    "main.js.map": "/globalgaming/static/js/main.75d1cc4b.chunk.js.map",
     "runtime-main.js": "/globalgaming/static/js/runtime-main.b18b6b02.js",
     "runtime-main.js.map": "/globalgaming/static/js/runtime-main.b18b6b02.js.map",
     "static/js/2.5b0a34cc.chunk.js": "/globalgaming/static/js/2.5b0a34cc.chunk.js",
     "static/js/2.5b0a34cc.chunk.js.map": "/globalgaming/static/js/2.5b0a34cc.chunk.js.map",
     "index.html": "/globalgaming/index.html",
-    "precache-manifest.038a2326b78e57222e89e0e0c47a4b5a.js": "/globalgaming/precache-manifest.038a2326b78e57222e89e0e0c47a4b5a.js",
+    "precache-manifest.004d88455582a5d3d743e7b92c1b02d2.js": "/globalgaming/precache-manifest.004d88455582a5d3d743e7b92c1b02d2.js",
     "service-worker.js": "/globalgaming/service-worker.js",
     "static/css/main.f5963df5.chunk.css.map": "/globalgaming/static/css/main.f5963df5.chunk.css.map",
     "static/js/2.5b0a34cc.chunk.js.LICENSE.txt": "/globalgaming/static/js/2.5b0a34cc.chunk.js.LICENSE.txt"
@@ -17,6 +17,6 @@
     "static/js/runtime-main.b18b6b02.js",
     "static/js/2.5b0a34cc.chunk.js",
     "static/css/main.f5963df5.chunk.css",
-    "static/js/main.951a2455.chunk.js"
+    "static/js/main.75d1cc4b.chunk.js"
   ]
 }
