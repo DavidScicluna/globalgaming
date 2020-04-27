@@ -5,11 +5,8 @@ import { bindActionCreators } from 'redux';
 // Actions
 import * as appActions from '../../actions/AppAction';
 
-// Fetch Method
-import fetchApi from '../../utils/fetchApi';
-
 // Material UI Components
-import { makeStyles, Grid, TextField, Button, Typography, IconButton, Fade, Box } from '@material-ui/core';
+import { makeStyles, Fade, Grid, Typography, Box, IconButton, Button } from '@material-ui/core';
 
 // // Icons
 import StarRoundedIcon from '@material-ui/icons/StarRounded';
@@ -27,15 +24,10 @@ const useStyles = makeStyles((theme) => ({
     Margin: {
         margin: theme.spacing(1, 0)
     },
-    // '@media (min-width: 1024px)': {
-    //     TrendingItem: {
-    //         cursor: 'pointer',
-    //         width: '342px'
-    //     },
-    // },
     Rating: {
         display: 'flex',
         alignItems: 'center',
+        marginLeft: theme.spacing(0.25, 0),
         lineHeight: 'normal',
         '& svg': {
             fontSize: theme.typography.h4.fontSize,
@@ -307,8 +299,8 @@ const Preview = (props) => {
 
     return (
         <Fade in={animation} timeout={1000} >
-            <Grid container direction="column">
-                <Grid item container direction="row" alignItems="center" justify="space-between">
+            <Grid container direction='column'>
+                <Grid item container direction='row' alignItems='center' justify='space-between'>
                     <Typography className={Style.Title} variant='h2' style={{fontWeight: '700'}}>
                         {(props.gridPreviewApiCategory === 'tv') ? item.original_name : (props.gridPreviewApiCategory === 'movie') ? item.title : ''}
                     </Typography>
@@ -334,7 +326,7 @@ const Preview = (props) => {
                     <Typography variant='body1' paragraph>
                         {item.overview}
                     </Typography>
-                    <Grid item container direction="row" alignItems="center" justify="flex-start">
+                    <Grid item container direction='row' alignItems='center' justify='flex-start'>
                         <IconButton aria-label='Like' className={Style.LikeButton} disableRipple onClick={() => handleLikeMovie(item, props.gridPreviewApiCategory)} disabled={props.user.access === 'guest' ? true : false}>
                             {
                                 renderLike(item, props.gridPreviewApiCategory)
