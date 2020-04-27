@@ -42,6 +42,13 @@ export const setGridPreviewApiTitle = (type) => {
     }
 };
 
+export const setPreview = (item) => {
+    return {
+        type: actionType.SET_PREVIEW,
+        payload: item
+    }
+};
+
 export const setUsers = (users) => {
     return {
         type: actionType.SET_USERS,

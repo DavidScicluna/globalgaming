@@ -10,6 +10,7 @@ const initialState = {
     gridPreviewApiCategory: '',
     gridPreviewApiType: '',
     gridPreviewApiTitle: '',
+    preview: {},
     users: getUsers,
     user: getUser
 }
@@ -46,6 +47,11 @@ const appReducer = (state = initialState, action) => {
                 ...state,
                 gridPreviewApiTitle: action.payload,
             }
+        case actionType.SET_PREVIEW:
+            return {
+                ...state,
+                preview: action.payload
+            } 
         case actionType.SET_USERS:
             return {
                 ...state,

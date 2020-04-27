@@ -40,8 +40,15 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const RenderHomeApiData = ({Style, header, data, dataName, category, handleOpenPage}) => {
+const RenderHomeApiData = ({Style, props, header, data, dataName, category, handleOpenPage}) => {
     const newData = (dataName === 'Trending') ? data.results : data;
+
+    // This method will open the preview page to display further details
+    const handleOpenPreview = (item, media) => {
+        props.setPreview(item); 
+        props.setGridPreviewApiCategory(media);
+        props.setGridPreviewApiType('preview');
+    }
 
     return(
         <React.Fragment>
@@ -75,6 +82,7 @@ const RenderHomeApiData = ({Style, header, data, dataName, category, handleOpenP
                                             alt={(media === 'tv') ? item.original_name : (media === 'movie') ? item.title : ''}
                                             className={Style.Poster}
                                             src={`https://image.tmdb.org/t/p/w342/${item.poster_path}`}
+                                            onMouseDown={() => handleOpenPreview(item, media)}
                                         />
                                     </Box>
                                 );
@@ -98,9 +106,9 @@ const Home = (props) => {
 
     return (
         <Grid container direction='column'>
-            <RenderHomeApiData Style={Style} header={'Trending'} data={props.trending} dataName={'Trending'} category={''} handleOpenPage={handleOpenPage} />
-            <RenderHomeApiData Style={Style} header={'Popular Movies'} data={props.moviePopular} dataName={'Popular'} category={'movie'} handleOpenPage={handleOpenPage} />
-            <RenderHomeApiData Style={Style} header={'Popular TV'} data={props.tvPopular} dataName={'Popular'} category={'tv'} handleOpenPage={handleOpenPage} />
+            <RenderHomeApiData Style={Style} props={props} header={'Trending'} data={props.trending} dataName={'Trending'} category={''} handleOpenPage={handleOpenPage} />
+            <RenderHomeApiData Style={Style} props={props} header={'Popular Movies'} data={props.moviePopular} dataName={'Popular'} category={'movie'} handleOpenPage={handleOpenPage} />
+            <RenderHomeApiData Style={Style} props={props} header={'Popular TV'} data={props.tvPopular} dataName={'Popular'} category={'tv'} handleOpenPage={handleOpenPage} />
         </Grid>
     )
 }
@@ -120,6 +128,7 @@ const matchDispatchToProps = (dispatch) => {
         setGridPreviewApiCategory: appActions.setGridPreviewApiCategory,
         setGridPreviewApiType: appActions.setGridPreviewApiType,
         setGridPreviewApiTitle: appActions.setGridPreviewApiTitle,
+        setPreview: appActions.setPreview,
     }, dispatch);
 }
 

@@ -1,14 +1,17 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 // Actions
 import * as appActions from '../../actions/AppAction';
 
-// Material UI Components
-import { makeStyles, Button, Box, Grid, Card, CardActionArea, CardMedia, CardContent, Typography, CardActions, IconButton} from '@material-ui/core';
+// Fetch Method
+import fetchApi from '../../utils/fetchApi';
 
-// Icons
+// Material UI Components
+import { makeStyles, Grid, TextField, Button, Typography, IconButton, Fade, Box } from '@material-ui/core';
+
+// // Icons
 import StarRoundedIcon from '@material-ui/icons/StarRounded';
 import FavoriteBorderRoundedIcon from '@material-ui/icons/FavoriteBorderRounded';
 import FavoriteRoundedIcon from '@material-ui/icons/FavoriteRounded';
@@ -17,27 +20,25 @@ import RemoveRoundedIcon from '@material-ui/icons/RemoveRounded';
 
 // Material UI Custom Component Style
 const useStyles = makeStyles((theme) => ({
-    Container: {
-        margin: theme.spacing(2, 0),
-        padding: theme.spacing(1, 0),
-    },
     Poster: {
         width: '100%',
-        borderRadius: `${theme.shape.borderRadius} ${theme.shape.borderRadius} 0 0`,
-        transition: '0.4s ease-in-out',
-
-        '&:hover': {
-            filter: 'brightness(50%)',
-        }
+        borderRadius: theme.shape.borderRadius,
     },
-    Content: {
-        backgroundColor: 'transparent',
+    Margin: {
+        margin: theme.spacing(1, 0)
     },
+    // '@media (min-width: 1024px)': {
+    //     TrendingItem: {
+    //         cursor: 'pointer',
+    //         width: '342px'
+    //     },
+    // },
     Rating: {
         display: 'flex',
         alignItems: 'center',
         lineHeight: 'normal',
         '& svg': {
+            fontSize: theme.typography.h4.fontSize,
             color: theme.palette.warning.main,
         }
     },
@@ -45,6 +46,10 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: theme.shape.borderRadius,
         boxShadow: 'none',
         
+        '& svg': {
+            fontSize: theme.typography.h4.fontSize,
+        },
+
         '&:hover': {
             boxShadow: 'none',
             color: theme.palette.error.main,
@@ -60,6 +65,7 @@ const useStyles = makeStyles((theme) => ({
         boxShadow: 'none',
         borderRadius: theme.shape.borderRadius,
         color: theme.palette.common.white,
+        fontSize: theme.typography.h6.fontSize,
         transition: '0.4s ease-in-out',
         '&:hover': {
             boxShadow: 'none',
@@ -77,34 +83,43 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
         lineHeight: 'normal'
     },
-    '@media (min-width: 1024px)': {
+    TrendingContainer: {
+        overflowX: 'auto',
+        overflowY: 'hidden'
+    },
+    TrendingItem: {
+        cursor: 'pointer',
+        width: '342px'
+    },
+    SimilarPoster: {
+        borderRadius: theme.shape.borderRadius,
+        transition: '0.4s ease-in-out',
+
+        '&:hover': {
+            filter: 'brightness(50%)',
+        }
+    },
+    '@media (max-width: 425px)': {
         Rating: {
-            fontSize: theme.typography.h5.fontSize
+            margin: theme.spacing(1, 0)
         },
-        Title: {
-            fontSize: theme.typography.h5.fontSize
-        },
-        Year: {
-            fontSize: theme.typography.h6.fontSize
+    },
+    '@media (min-width: 1024px)': {
+        Margin: {
+            margin: theme.spacing(2, 0)
         },
     },
 }));
 
-const RenderDataListItem = (props) => {
+const Preview = (props) => {
     const Style = useStyles();
-    const data = props.typeData || [];
-    
-    // This method will get the date and cut it and return only the year
-    const handleGetDate = (date) => {
-        if(date === undefined){
-            return
-        } else {
-            const splitDate = date.split('-');
-            const newDate = splitDate[0]
-            
-            return newDate
-        }
-    }
+
+    // Preview State
+    const [animation, setAnimation] = useState(true);
+    const [hasFetched, setHasFetched] = useState(false);
+    const [fetchedData, setFetchedData] = useState([]);
+
+    const item = props.preview;
 
     // This method will update the users & user state and local storage
     const handleUpdateState = (users, user) => {
@@ -259,63 +274,104 @@ const RenderDataListItem = (props) => {
         }
     }
 
-    // This method will open the preview page to display further details
-    const handleOpenPreview = (item) => {
-        props.setPreview(item); 
-        props.setGridPreviewApiCategory(props.category);
-        props.setGridPreviewApiType('preview');
+    // This method will open the preview page to display further details 
+    const handleOpenPreview = (item, media) => {
+        
+        setAnimation(false);
+        
+        setTimeout(() => {
+            window.scrollTo(0, 0);
+            setAnimation(true);
+            props.setPreview(item); 
+            props.setGridPreviewApiCategory(media);
+            props.setGridPreviewApiType('preview');
+        }, 1000);
     }
 
-    return(
-        <React.Fragment>
-            {
-                data === [] || data === undefined
-                    ? null
-                        :
-                        data.map((item, index) => {
-                            return(
-                                <Grid className={Style.Container} key={item.id} item sm={6}>
-                                    <Card elevation={0} className={'animated fadeInSign'} style={{animationDelay: (index % 2 === 0) ? 250 : 750}}>
-                                        <CardActionArea>
-                                            <CardMedia
-                                                alt={(props.category === 'tv') ? item.original_name : (props.category === 'movie') ? item.title : ''}
-                                                component='img'
-                                                className={Style.Poster}
-                                                image={`https://image.tmdb.org/t/p/w500/${item.poster_path}`}
-                                                onMouseDown={() => handleOpenPreview(item)}
+    useEffect(() => {
+        const key = 'c287015949cec13fb17a26e50b4f054a';
+
+        if(hasFetched === false){
+            fetch(`https://api.themoviedb.org/3/${props.gridPreviewApiCategory}/${item.id}/similar?&api_key=${key}&language=en-US&include_adult=false`)
+                .then(response => response.json())
+                .then(json => {
+                    setHasFetched(true);
+                    setFetchedData(json.results);
+                    return;
+                })
+                .catch(error => console.log(error));  
+        } else {
+            return
+        }
+    }, [hasFetched, item, props.gridPreviewApiCategory])
+
+    return (
+        <Fade in={animation} timeout={1000} >
+            <Grid container direction="column">
+                <Grid item container direction="row" alignItems="center" justify="space-between">
+                    <Typography className={Style.Title} variant='h2' style={{fontWeight: '700'}}>
+                        {(props.gridPreviewApiCategory === 'tv') ? item.original_name : (props.gridPreviewApiCategory === 'movie') ? item.title : ''}
+                    </Typography>
+                    <Typography className={Style.Rating} variant='h4'>
+                        <StarRoundedIcon />
+                        <span>
+                            {item.vote_average}
+                        </span>
+                    </Typography>
+                </Grid>
+                <Box className={Style.Margin} />
+                <Grid item>
+                    <img 
+                        alt={(props.gridPreviewApiCategory === 'tv') ? item.original_name : (props.gridPreviewApiCategory === 'movie') ? item.title : ''}
+                        className={Style.Poster}
+                        src={`https://image.tmdb.org/t/p/w780/${item.backdrop_path}`}
+                    />
+                    <Box className={Style.Margin} />
+                    <Typography variant='h4'>
+                        Overview
+                    </Typography>
+                    <Box my={0.25} />
+                    <Typography variant='body1' paragraph>
+                        {item.overview}
+                    </Typography>
+                    <Grid item container direction="row" alignItems="center" justify="flex-start">
+                        <IconButton aria-label='Like' className={Style.LikeButton} disableRipple onClick={() => handleLikeMovie(item, props.gridPreviewApiCategory)} disabled={props.user.access === 'guest' ? true : false}>
+                            {
+                                renderLike(item, props.gridPreviewApiCategory)
+                            }
+                        </IconButton>
+                        <Box mx={0.25} />
+                        {
+                            renderWatchlist(item, props.gridPreviewApiCategory)
+                        }
+                    </Grid>
+                </Grid>
+                <Box className={Style.Margin} />
+                <Typography variant='h5'>
+                    {`Similar ${(props.gridPreviewApiCategory === 'tv') ? 'TV Shows' : (props.gridPreviewApiCategory === 'movie') ? 'Movies' : ''}`} 
+                </Typography>
+                <Box my={0.25} />
+                <Grid className={Style.TrendingContainer} item container direction='row' wrap='nowrap' justify='flex-start'>
+                    {
+                        (fetchedData === {} || fetchedData === undefined)
+                            ? null
+                                :
+                                fetchedData.map((item, index) => {
+                                    return(
+                                        <Box className={`${Style.TrendingItem} animated fadeInSign`} style={{animationDelay: (index % 2 === 0) ? 250 : 750}} key={item.id} my={2} mr={2}>
+                                            <img 
+                                                alt={(props.gridPreviewApiCategory === 'tv') ? item.original_name : (props.gridPreviewApiCategory === 'movie') ? item.title : ''}
+                                                className={Style.SimilarPoster}
+                                                src={`https://image.tmdb.org/t/p/w342/${item.poster_path}`}
+                                                onMouseDown={() => handleOpenPreview(item, props.gridPreviewApiCategory)}
                                             />
-                                        </CardActionArea>
-                                        <CardContent className={Style.Content}>
-                                            <Typography className={Style.Rating} variant='h6'>
-                                                <StarRoundedIcon />
-                                                <span>
-                                                    {item.vote_average}
-                                                </span>
-                                            </Typography>
-                                            <Typography className={Style.Title} gutterBottom variant='h6' style={{fontWeight: '700'}}>
-                                                {(props.category === 'tv') ? item.original_name : (props.category === 'movie') ? item.title : ''}
-                                            </Typography>
-                                            <Typography className={Style.Year} color='textSecondary' variant='button'>
-                                                {(props.category === 'tv') ? `(${handleGetDate(item.first_air_date)})` : (props.category === 'movie') ? `(${handleGetDate(item.release_date)})` : ''}
-                                            </Typography>
-                                        </CardContent>
-                                        <CardActions className={Style.Content} disableSpacing>
-                                            <IconButton aria-label='Like' className={Style.LikeButton} disableRipple onClick={() => handleLikeMovie(item, props.category)} disabled={props.user.access === 'guest' ? true : false}>
-                                                {
-                                                    renderLike(item, props.category)
-                                                }
-                                            </IconButton>
-                                            <Box mx={0.25} />
-                                            {
-                                                renderWatchlist(item, props.category)
-                                            }
-                                        </CardActions>
-                                    </Card>
-                                </Grid>
-                            );
-                        })
-            }
-        </React.Fragment>
+                                        </Box>
+                                    );
+                                })
+                    } 
+                </Grid>
+            </Grid>
+        </Fade>
     )
 }
 
@@ -323,6 +379,8 @@ const RenderDataListItem = (props) => {
 const mapStateToProps = (state) => {
     return{
         // Internal State (APP)
+        gridPreviewApiCategory: state.app.gridPreviewApiCategory,
+        preview: state.app.preview,
         users: state.app.users,
         user: state.app.user,
     };
@@ -339,4 +397,4 @@ const mapStateToProps = (state) => {
       }, dispatch);
   }
   
-  export default connect(mapStateToProps, matchDispatchToProps)(RenderDataListItem);
+  export default connect(mapStateToProps, matchDispatchToProps)(Preview);

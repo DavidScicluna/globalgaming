@@ -198,7 +198,7 @@ const Menu = (props) => {
                     <Grid item>
                         <List>
 
-                            <ListItem className={props.gridPreviewApiCategory === '' || props.gridPreviewApiType === '' ? `${Style.Header} ${Style.ButtonActive}` : `${Style.Header} ${Style.Button}`} button onClick={() => handleOpenPage('', '')}>
+                            <ListItem className={props.gridPreviewApiCategory === '' ? `${Style.Header} ${Style.ButtonActive}` : `${Style.Header} ${Style.Button}`} button onClick={() => handleOpenPage('', '')}>
                                 <HomeOutlinedIcon className={Style.MarginRight} />
                                 <ListItemText primary='Home' />
                             </ListItem>

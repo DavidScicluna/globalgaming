@@ -167,12 +167,9 @@ export default function Signin( {users, handleClickDialog, handleUpdateState} ) 
             if(currentUsers.length === 0){
                 setError(true);
             }else{
-                let userCorrect = false;
-
                 currentUsers.forEach(item => {
                     if(usernameValue === item.username && passwordValue === item.password){
                         setError(false);
-                        userCorrect = true;
                         handleUpdateState(currentUsers, item);
                         setTimeout(() => {
                             handleClickDialog('correct');

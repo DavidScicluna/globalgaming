@@ -16,6 +16,7 @@ import Header from '../components/Header/Header';
 import Home from '../components/Home/Home';
 import UserData from '../components/UserData/UserData';
 import GridPreview from '../components/GridPreview/GridPreview';
+import Preview from '../components/Preview/Preview';
 
 // Material UI Components
 import { CssBaseline, createMuiTheme, ThemeProvider, Container, Box } from '@material-ui/core';
@@ -125,11 +126,14 @@ class App extends React.Component{
                     ?
                     <UserData />
                       :
-                      (this.props.gridPreviewApiCategory === '' || this.props.gridPreviewApiType === '')
-                        ?
-                        <Home />
+                      (this.props.gridPreviewApiType === 'preview')
+                        ? <Preview />
                           :
-                          <GridPreview />
+                          (this.props.gridPreviewApiCategory === '' || this.props.gridPreviewApiType === '')
+                            ?
+                            <Home />
+                              :
+                              <GridPreview />
                 }
               </Box>
               <SignDialog />
@@ -149,6 +153,7 @@ const mapStateToProps = (state) => {
     openSearchDialog: state.app.openSearchDialog,
     gridPreviewApiCategory: state.app.gridPreviewApiCategory,
     gridPreviewApiType: state.app.gridPreviewApiType,
+    gridPreviewApiTitle: state.app.gridPreviewApiTitle,
     user: state.app.user,
   };
 };
