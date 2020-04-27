@@ -369,16 +369,20 @@ const Preview = (props) => {
                             ? null
                                 :
                                 fetchedData.map((fetchedItem, index) => {
-                                    return(
-                                        <Box className={`${Style.TrendingItem} animated fadeInSign`} style={{animationDelay: (index % 2 === 0) ? 250 : 750}} key={fetchedItem.id} my={2} mr={2}>
-                                            <img 
-                                                alt={(props.gridPreviewApiCategory === 'tv') ? fetchedItem.original_name : (props.gridPreviewApiCategory === 'movie') ? fetchedItem.title : ''}
-                                                className={Style.SimilarPoster}
-                                                src={fetchedItem.poster_path === null ? 'https://via.placeholder.com/276x414' : `https://image.tmdb.org/t/p/w342/${fetchedItem.poster_path}`}
-                                                onMouseDown={() => handleOpenPreview(fetchedItem, props.gridPreviewApiCategory)}
-                                            />
-                                        </Box>
-                                    );
+                                    if(fetchedItem.id === item.id){
+                                        return null;
+                                    }else{
+                                        return(
+                                            <Box className={`${Style.TrendingItem} animated fadeInSign`} style={{animationDelay: (index % 2 === 0) ? 250 : 750}} key={fetchedItem.id} my={2} mr={2}>
+                                                <img 
+                                                    alt={(props.gridPreviewApiCategory === 'tv') ? fetchedItem.original_name : (props.gridPreviewApiCategory === 'movie') ? fetchedItem.title : ''}
+                                                    className={Style.SimilarPoster}
+                                                    src={fetchedItem.poster_path === null ? 'https://via.placeholder.com/276x414' : `https://image.tmdb.org/t/p/w342/${fetchedItem.poster_path}`}
+                                                    onMouseDown={() => handleOpenPreview(fetchedItem, props.gridPreviewApiCategory)}
+                                                />
+                                            </Box>
+                                        );
+                                    }
                                 })
                     } 
                 </Grid>
