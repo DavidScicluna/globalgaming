@@ -15,6 +15,7 @@ To Visit App:
   [Link](https://davidscicluna.github.io/globalgaming/)
 
 ## Dependencies
+  * [API from TMDB](https://www.themoviedb.org)
   * [Icons from Font Material Icons](https://material.io/resources/icons/?style=baseline)
   * [UI Components from Material-UI](https://material-ui.com)
   * [State Management From Redux](https://redux.js.org)
