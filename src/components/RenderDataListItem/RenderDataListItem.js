@@ -17,17 +17,6 @@ import RemoveRoundedIcon from '@material-ui/icons/RemoveRounded';
 
 // Material UI Custom Component Style
 const useStyles = makeStyles((theme) => ({
-    '@media (min-width: 1024px)': {
-        Rating: {
-            fontSize: theme.typography.h5.fontSize
-        },
-        Title: {
-            fontSize: theme.typography.h5.fontSize
-        },
-        Year: {
-            fontSize: theme.typography.h6.fontSize
-        },
-    },
     Container: {
         margin: theme.spacing(2, 0),
         padding: theme.spacing(1, 0),
@@ -87,7 +76,18 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         alignItems: 'center',
         lineHeight: 'normal'
-    }
+    },
+    '@media (min-width: 1024px)': {
+        Rating: {
+            fontSize: theme.typography.h5.fontSize
+        },
+        Title: {
+            fontSize: theme.typography.h5.fontSize
+        },
+        Year: {
+            fontSize: theme.typography.h6.fontSize
+        },
+    },
 }));
 
 const RenderDataListItem = (props) => {
@@ -238,7 +238,7 @@ const RenderDataListItem = (props) => {
 
         if(check === true){
             return(
-                <Button className={`${Style.WatchlistButton} ${Style.WatchlistRemoveButton}`} disableRipple variant="contained" onClick={() => handleAddToWatchlist(item, category)} disabled={props.user.access === 'guest' ? true : false}>
+                <Button className={`${Style.WatchlistButton} ${Style.WatchlistRemoveButton}`} disableRipple variant='contained' onClick={() => handleAddToWatchlist(item, category)} disabled={props.user.access === 'guest' ? true : false}>
                     <div className={Style.ButtonContent}>
                         <RemoveRoundedIcon />
                         <Box mr={0.75} />
@@ -248,7 +248,7 @@ const RenderDataListItem = (props) => {
             )
         }else{
             return(   
-                <Button color="primary" className={Style.WatchlistButton} disableRipple variant="contained" onClick={() => handleAddToWatchlist(item, category)} disabled={props.user.access === 'guest' ? true : false}>
+                <Button color='primary' className={Style.WatchlistButton} disableRipple variant='contained' onClick={() => handleAddToWatchlist(item, category)} disabled={props.user.access === 'guest' ? true : false}>
                     <div className={Style.ButtonContent}>
                         <AddRoundedIcon />
                         <Box mr={0.75} />
@@ -272,22 +272,22 @@ const RenderDataListItem = (props) => {
                                         <CardActionArea>
                                             <CardMedia
                                                 alt={(props.category === 'tv') ? item.original_name : (props.category === 'movie') ? item.title : ''}
-                                                component="img"
+                                                component='img'
                                                 className={Style.Poster}
                                                 image={`https://image.tmdb.org/t/p/w500/${item.poster_path}`}
                                             />
                                         </CardActionArea>
                                         <CardContent className={Style.Content}>
-                                            <Typography className={Style.Rating} variant="h6">
+                                            <Typography className={Style.Rating} variant='h6'>
                                                 <StarRoundedIcon />
                                                 <span>
                                                     {item.vote_average}
                                                 </span>
                                             </Typography>
-                                            <Typography className={Style.Title} gutterBottom variant="h6" style={{fontWeight: '700'}}>
+                                            <Typography className={Style.Title} gutterBottom variant='h6' style={{fontWeight: '700'}}>
                                                 {(props.category === 'tv') ? item.original_name : (props.category === 'movie') ? item.title : ''}
                                             </Typography>
-                                            <Typography className={Style.Year} color="textSecondary" variant="button">
+                                            <Typography className={Style.Year} color='textSecondary' variant='button'>
                                                 {(props.category === 'tv') ? `(${handleGetDate(item.first_air_date)})` : (props.category === 'movie') ? `(${handleGetDate(item.release_date)})` : ''}
                                             </Typography>
                                         </CardContent>

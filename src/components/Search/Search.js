@@ -10,7 +10,7 @@ import RenderDataListItem from '../RenderDataListItem/RenderDataListItem'
 
 // Material UI Components
 import { makeStyles, Dialog, Slide, DialogTitle, Button, Container, Box, Grid, Typography, Input, FormControl, InputAdornment, Hidden, TextField, MenuItem} from '@material-ui/core';
-import Pagination from "material-ui-flat-pagination";
+import Pagination from 'material-ui-flat-pagination';
 
 // Icons
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
@@ -76,16 +76,16 @@ const useStyles = makeStyles((theme) => ({
 
 export const ShowSelectContent = ({justify, handleShowChange, showValue}) => {
     return(
-        <Grid item sm={6} container direction="row" justify={justify} alignItems="center" spacing={1}>
+        <Grid item sm={6} container direction='row' justify={justify} alignItems='center' spacing={1}>
             <Grid item>
-                <Typography variant="button">
+                <Typography variant='button'>
                     Show:
                 </Typography>
             </Grid>
             <Grid item>
                 <TextField
-                    aria-label="Show Items Select"
-                    color="primary"
+                    aria-label='Show Items Select'
+                    color='primary'
                     fullWidth
                     onChange={(event) => handleShowChange(event)}
                     select
@@ -140,9 +140,9 @@ const Search = (props) => {
         setSearchValue(event.target.value);
     }
 
-    // This method will set the state of searchEntered to true whenever the user presses the key "Enter"
+    // This method will set the state of searchEntered to true whenever the user presses the key 'Enter'
     const handleClickSearch = (event) => {
-        if(event.key === "Enter"){
+        if(event.key === 'Enter'){
             setSearchEntered(true);
         }
     }
@@ -213,7 +213,7 @@ const Search = (props) => {
             className={Style.Dialog}
             fullWidth
             fullScreen
-            maxWidth="md"
+            maxWidth='md'
             onClose={handleClickCloseSearchDialog}
             open={props.openSearchDialog}
             TransitionComponent={Slide}
@@ -228,18 +228,18 @@ const Search = (props) => {
                     </div>
                 </Button>
             </DialogTitle>
-            <Container maxWidth="sm" disableGutters>
+            <Container maxWidth='sm' disableGutters>
                 <Box p={2}>
-                    <Grid container direction="column">
+                    <Grid container direction='column'>
                         <Grid item>
-                            <Typography variant="h6">
+                            <Typography variant='h6'>
                                 Find a Movie or Series
                             </Typography>
                             <Box my={1} />
                             <FormControl style={{width: '100%'}}>
                                 <Input
-                                    aria-label="Search Bar"
-                                    color="primary"
+                                    aria-label='Search Bar'
+                                    color='primary'
                                     className={searchFocused === true ? `${Style.Search} ${Style.SearchActive}` : Style.Search}
                                     fullWidth
                                     onChange={(event) => handleSearchChange(event)}
@@ -248,21 +248,21 @@ const Search = (props) => {
                                     onBlur={() => setSearchFocused(false)}
                                     placeholder='Press enter to view data'
                                     startAdornment={
-                                        <InputAdornment position="start">
+                                        <InputAdornment position='start'>
                                             <SearchOutlinedIcon />
                                         </InputAdornment>
                                     }
-                                    type="text"
-                                    variant="outlined"
+                                    type='text'
+                                    variant='outlined'
                                     value={searchValue}
                                 />
                             </FormControl>
                         </Grid>
                         <Box my={2} />
-                        <Grid item container direction="row" justify="space-between" alignItems="center">
+                        <Grid item container direction='row' justify='space-between' alignItems='center'>
                             <Grid item sm={6}>
-                                <Typography className={searchEntered === false ? Style.Hidden : Style.Visible} variant="body2">
-                                    {searchResultsNumber} matching results for {`"${searchValue}"`}
+                                <Typography className={searchEntered === false ? Style.Hidden : Style.Visible} variant='body2'>
+                                    {searchResultsNumber} matching results for {`'${searchValue}'`}
                                 </Typography>
                             </Grid>
                             <Hidden smUp>
@@ -277,17 +277,17 @@ const Search = (props) => {
                             (searchValue === '' || searchEntered === false || searchMovieData === {} || searchTVData === {})
                                 ? null
                                     :
-                                        <Grid item container alignItems="flex-start" justify="flex-start" wrap="wrap" spacing={2}>
+                                        <Grid item container alignItems='flex-start' justify='flex-start' wrap='wrap' spacing={2}>
                                             <RenderDataListItem 
                                                 typeData={showValue === 'movie' ? searchMovieData.results : searchTVData.results } 
                                                 category={showValue}
                                             />
                                         </Grid>
                         }
-                        <Grid item container justify="flex-end">
+                        <Grid item container justify='flex-end'>
                             <Pagination
-                                currentPageColor="primary"
-                                otherPageColor="default"
+                                currentPageColor='primary'
+                                otherPageColor='default'
                                 className={searchEntered === false ? `${Style.Margin} ${Style.Hidden}` : `${Style.Margin} ${Style.Visible}`}
                                 disableRipple
                                 limit={5}

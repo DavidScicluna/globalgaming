@@ -171,7 +171,7 @@ const Menu = (props) => {
         props.setOpenSearchDialog(true);
     };
 
-    // Closes Search Dialog Component
+    // Opens Customize Dialog Component
     const handleClickOpenCustomizeDialog = (event) => {
         event.preventDefault();
         props.setOpenCustomizeDialog(true);
@@ -179,14 +179,14 @@ const Menu = (props) => {
 
     return (
         <Drawer
-            anchor="left"
+            anchor='left'
             elevation={2}
             open={props.openDrawer}
             onClose={props.handleCloseDrawer}
             transitionDuration={750}
         >
             <Box p={2} className={Style.Drawer}>
-                <Grid container direction="column" spacing={2}>
+                <Grid container direction='column' spacing={2}>
                     <Grid item>
                         <Button className={Style.CloseButton} disableRipple onClick={props.handleCloseDrawer}>
                             <div className={Style.ButtonContent}>
@@ -200,18 +200,18 @@ const Menu = (props) => {
 
                             <ListItem className={props.gridPreviewApiCategory === '' || props.gridPreviewApiType === '' ? `${Style.Header} ${Style.ButtonActive}` : `${Style.Header} ${Style.Button}`} button onClick={() => handleOpenPage('', '')}>
                                 <HomeOutlinedIcon className={Style.MarginRight} />
-                                <ListItemText primary="Home" />
+                                <ListItemText primary='Home' />
                             </ListItem>
                             <ListItem className={`${Style.Header} ${Style.Button}`} button onClick={(event) => handleClickOpenSearchDialog(event)}>
                                 <SearchOutlinedIcon className={Style.MarginRight} />
-                                <ListItemText primary="Search" />
+                                <ListItemText primary='Search' />
                             </ListItem>
 
-                            <Divider className={Style.Divider} variant="inset" />
+                            <Divider className={Style.Divider} variant='inset' />
 
                             <ListItem className={openMovies === true ? `${Style.Header} ${Style.ButtonFolderActive}` : `${Style.Header} ${Style.Button}`} button onClick={handleClickMovies}>
                                 <TheatersOutlinedIcon className={Style.MarginRight} />
-                                <ListItemText primary="Movies" />
+                                <ListItemText primary='Movies' />
                                 <Box style={{flex: 1}} />
                                 <ArrowDropDownRoundedIcon className={(openMovies === true) ? Style.IconActive : Style.IconInactive} />
                             </ListItem>
@@ -231,7 +231,7 @@ const Menu = (props) => {
 
                             <ListItem className={openTV === true ? `${Style.Header} ${Style.ButtonFolderActive}` : `${Style.Header} ${Style.Button}`} button onClick={handleClickTV}>
                                 <TvOutlinedIcon className={Style.MarginRight} />
-                                <ListItemText primary="TV" />
+                                <ListItemText primary='TV' />
                                 <Box style={{flex: 1}} />
                                 <ArrowDropDownRoundedIcon className={(openTV === true) ? Style.IconActive : Style.IconInactive} />
                             </ListItem>
@@ -249,22 +249,22 @@ const Menu = (props) => {
                                 </List>
                             </Collapse>
 
-                            <Divider className={Style.Divider} variant="inset" />
+                            <Divider className={Style.Divider} variant='inset' />
 
                             <ListItem className={`${Style.Header} ${Style.Button}`} button onClick={() => {props.setGridPreviewApiCategory('likes'); props.handleCloseDrawer()}} disabled={props.user.access === 'guest' ? true : false}>
                                 <FavoriteBorderOutlinedIcon className={Style.MarginRight} />
-                                <ListItemText primary="Liked" />
+                                <ListItemText primary='Liked' />
                             </ListItem>
                             <ListItem className={`${Style.Header} ${Style.Button}`} button onClick={() => {props.setGridPreviewApiCategory('watchlist'); props.handleCloseDrawer()}} disabled={props.user.access === 'guest' ? true : false}>
                                 <HourglassEmptyOutlinedIcon className={Style.MarginRight} />
-                                <ListItemText primary="Watchlist" />
+                                <ListItemText primary='Watchlist' />
                             </ListItem>
 
-                            <Divider className={Style.Divider} variant="inset" />
+                            <Divider className={Style.Divider} variant='inset' />
 
                             <ListItem className={`${Style.Header} ${Style.Button}`} button onClick={(event) => {handleClickOpenCustomizeDialog(event); props.handleCloseDrawer()}} disabled={props.user.access === 'guest' ? true : false}>
                                 <ColorLensOutlinedIcon className={Style.MarginRight} />
-                                <ListItemText primary="Customize" />
+                                <ListItemText primary='Customize' />
                             </ListItem>
                         </List>
                     </Grid>

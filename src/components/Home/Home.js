@@ -45,8 +45,8 @@ const RenderHomeApiData = ({Style, header, data, dataName, category, handleOpenP
 
     return(
         <React.Fragment>
-            <Grid item container direction="row" alignItems="center" justify="flex-start">
-                <Typography className={Style.Header} variant="h4" color="textPrimary">
+            <Grid item container direction='row' alignItems='center' justify='flex-start'>
+                <Typography className={Style.Header} variant='h4' color='textPrimary'>
                     {header}
                 </Typography>
                 {
@@ -61,7 +61,7 @@ const RenderHomeApiData = ({Style, header, data, dataName, category, handleOpenP
                             </React.Fragment>
                 }
             </Grid>
-            <Grid className={Style.TrendingContainer} item container direction="row" wrap="nowrap" justify="flex-start">
+            <Grid className={Style.TrendingContainer} item container direction='row' wrap='nowrap' justify='flex-start'>
                 {
                     (newData === {} || newData === undefined)
                         ? null
@@ -97,7 +97,7 @@ const Home = (props) => {
     }
 
     return (
-        <Grid container direction="column">
+        <Grid container direction='column'>
             <RenderHomeApiData Style={Style} header={'Trending'} data={props.trending} dataName={'Trending'} category={''} handleOpenPage={handleOpenPage} />
             <RenderHomeApiData Style={Style} header={'Popular Movies'} data={props.moviePopular} dataName={'Popular'} category={'movie'} handleOpenPage={handleOpenPage} />
             <RenderHomeApiData Style={Style} header={'Popular TV'} data={props.tvPopular} dataName={'Popular'} category={'tv'} handleOpenPage={handleOpenPage} />

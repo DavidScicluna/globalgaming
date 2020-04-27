@@ -12,7 +12,7 @@ import { makeStyles, Grid, Typography, Hidden} from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
     '@media (max-width: 425px)': {
         Header: {
-            fontSize: theme.typography.h6.fontSize
+            fontSize: theme.typography.h5.fontSize
         },
     },
     Header: {
@@ -35,10 +35,10 @@ const UserData = (props) => {
     }
 
     return (
-        <Grid container direction="column">
-            <Grid item container direction="row" alignItems="center" justify="flex-start">
+        <Grid container direction='column'>
+            <Grid item container direction='row' alignItems='center' justify='flex-start'>
                 <Grid item sm={6}>
-                    <Typography className={Style.Header} variant="h4" color="textPrimary">
+                    <Typography className={Style.Header} variant='h4' color='textPrimary'>
                         {
                             `Your ${props.gridPreviewApiCategory}`
                         }
@@ -51,7 +51,7 @@ const UserData = (props) => {
                     <ShowSelectContent justify='flex-end' handleShowChange={handleShowChange} showValue={showValue} />
                 </Hidden>
             </Grid>
-            <Grid item container alignItems="flex-start" justify="flex-start" wrap="wrap" spacing={2}>
+            <Grid item container alignItems='flex-start' justify='flex-start' wrap='wrap' spacing={2}>
                 <RenderDataListItem 
                     typeData={(props.gridPreviewApiCategory === 'likes') ? props.user.likes[showValue] : (props.gridPreviewApiCategory === 'watchlist') ? props.user.watchlist[showValue] : null} 
                     category={showValue} 

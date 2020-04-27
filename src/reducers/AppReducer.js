@@ -1,7 +1,7 @@
 import * as actionType from '../actionTypes/actionTypes';
 
-const getUsers = JSON.parse(localStorage.getItem("users") || "[]");
-const getUser = JSON.parse(localStorage.getItem("users") || "{}");
+const getUsers = JSON.parse(localStorage.getItem('users') || '[]');
+const getUser = JSON.parse(localStorage.getItem('user') || '{}');
 
 const initialState = {
     openSignDialog: true,

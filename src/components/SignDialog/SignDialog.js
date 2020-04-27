@@ -10,32 +10,28 @@ import Signin from '../Signin/Signin';
 import Signup from '../Signup/Signup';
 
 // Material UI Components
-import { makeStyles, Dialog, DialogTitle, DialogContent, Fade, Grow} from '@material-ui/core';
+import { makeStyles, Dialog, Fade, DialogTitle, DialogContent} from '@material-ui/core';
 
 // Material UI Custom Component Style
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     Dialog : {
         backdropFilter: 'blur(10px)',
     },
-    DialogContent : {
-        minHeight: '525px',
-        display: 'flex',
-        justifyContent: 'center',
-    },
 }));
 
-const SignDialog = ( {openSignDialog, users, setOpenSignDialog, setUsers, setUser} ) => {
+const SignDialog = (props) => {
     const Style = useStyles();
 
     const [currentPage, setCurrentPage] = useState('in');
 
+    // Animation State
     const [signInAnimation, setSignInAnimation] = useState(true);
     const [signUpAnimation, setSignUpAnimation] = useState(false);
 
     // This method will set the dialog content depending on the currentPage state or close the dialog
     const handleClickDialog = (type) => {
         switch(type){
-            case "in":
+            case 'in':
                 setSignUpAnimation(false);
 
                 setTimeout(() => {
@@ -43,7 +39,7 @@ const SignDialog = ( {openSignDialog, users, setOpenSignDialog, setUsers, setUse
                     setCurrentPage(type);
                 }, 1000);
                 return;
-            case "up":
+            case 'up':
                 setSignInAnimation(false);
 
                 setTimeout(() => {
@@ -52,7 +48,7 @@ const SignDialog = ( {openSignDialog, users, setOpenSignDialog, setUsers, setUse
                 }, 1000);
                 return;
             case 'correct':
-                setOpenSignDialog(false);
+                props.setOpenSignDialog(false);
                 setSignInAnimation(true);
                 setSignUpAnimation(true);
 
@@ -65,40 +61,40 @@ const SignDialog = ( {openSignDialog, users, setOpenSignDialog, setUsers, setUse
         }
     }
 
+    // This method will update the users & user state and local storage
     const handleUpdateState = (users, user) => {
-        // Setting users and user in local storage
-        localStorage.setItem("users", JSON.stringify(users));
+        localStorage.setItem('users', JSON.stringify(users));
         localStorage.setItem('user', JSON.stringify(user));
 
-        setUsers(users);
-        setUser(user);
+        props.setUsers(users);
+        props.setUser(user);
     }
 
     return (
         <Dialog
             className={Style.Dialog}
-            aria-labelledby="SignTitle"
+            aria-labelledby='SignTitle'
             disableBackdropClick
             disableEscapeKeyDown
             fullWidth
-            maxWidth="xs"
-            open={openSignDialog}
+            maxWidth='xs'
+            open={props.openSignDialog}
             TransitionComponent={Fade}
             transitionDuration={1000}
 
         >
-            <DialogTitle id="SignTitle">
+            <DialogTitle id='SignTitle'>
                 {
-                    currentPage === "in"
+                    currentPage === 'in'
                         ? <span className={signInAnimation === true ? 'animated fadeInSign' : 'animated fadeOutSign'}>Sign in</span>
                             : <span className={signUpAnimation === true ? 'animated fadeInSign' : 'animated fadeOutSign'}>Sign up</span>
                 }
             </DialogTitle>
-            <DialogContent className={Style.DialogContent}>
+            <DialogContent>
                 {
-                    currentPage === "in"
-                        ? <div className={signInAnimation === true ? 'animated fadeInSign' : 'animated fadeOutSign'}><Signin users={users} handleClickDialog={handleClickDialog} handleUpdateState={handleUpdateState} /></div>
-                            : <div className={signUpAnimation === true ? 'animated fadeInSign' : 'animated fadeOutSign'}><Signup users={users} handleClickDialog={handleClickDialog} handleUpdateState={handleUpdateState} /></div>
+                    currentPage === 'in'
+                        ? <div className={signInAnimation === true ? 'animated fadeInSign' : 'animated fadeOutSign'}><Signin users={props.users} handleClickDialog={handleClickDialog} handleUpdateState={handleUpdateState} /></div>
+                            : <div className={signUpAnimation === true ? 'animated fadeInSign' : 'animated fadeOutSign'}><Signup users={props.users} handleClickDialog={handleClickDialog} handleUpdateState={handleUpdateState} /></div>
                 }
             </DialogContent>
         </Dialog>

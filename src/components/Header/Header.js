@@ -50,7 +50,15 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         alignItems: 'center',
         lineHeight: 'normal'
-    }
+    },
+    '@media (max-width: 425px)': {
+        Button : {
+            background: 'transparent',
+        },
+        ButtonActive : {
+            background: 'transparent',
+        },
+    },
 }));
 
 const Header = ( {user, setOpenSearchDialog} ) => {
@@ -103,14 +111,14 @@ const Header = ( {user, setOpenSearchDialog} ) => {
             <Paper className={Style.Paper} elevation={0}>
                 <Toolbar disableGutters>
                     <Hidden smUp>
-                        <IconButton aria-label="Menu" className={(openDrawer === true) ? Style.ButtonActive : Style.Button} disableRipple edge="start" onClick={(event) => handleClickOpenMenuDrawer(event)}>
+                        <IconButton aria-label='Menu' className={(openDrawer === true) ? Style.ButtonActive : Style.Button} disableRipple edge='start' onClick={(event) => handleClickOpenMenuDrawer(event)}>
                             <MenuRoundedIcon />
                         </IconButton>
                         <Box style={{flex: 1}} />
-                        <IconButton aria-label="Search" className={Style.Button} disableRipple edge="start" onClick={(event) => handleClickOpenSearchDialog(event)}>
+                        <IconButton aria-label='Search' className={Style.Button} disableRipple edge='start' onClick={(event) => handleClickOpenSearchDialog(event)}>
                             <SearchRoundedIcon />
                         </IconButton>
-                        <IconButton aria-label="Account Menu" className={(openPopper === true) ? Style.ButtonActive : Style.Button} disableRipple edge="end" onClick={(event) => handleClickOpenAccountMenuPopover(event)}>
+                        <IconButton aria-label='Account Menu' className={(openPopper === true) ? Style.ButtonActive : Style.Button} disableRipple edge='end' onClick={(event) => handleClickOpenAccountMenuPopover(event)}>
                             <FaceRoundedIcon />
                             <ArrowDropDownRoundedIcon className={(openPopper === true) ? Style.IconActive : Style.IconInactive} />
                         </IconButton>

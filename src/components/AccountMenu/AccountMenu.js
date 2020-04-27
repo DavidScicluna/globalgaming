@@ -26,26 +26,44 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ListItems = ({props, Signout}) => {
+    // Opens Customize Dialog Component
+    const handleClickOpenCustomizeDialog = (event) => {
+        event.preventDefault();
+        props.setOpenCustomizeDialog(true);
+        props.handleClosePopover()
+    };
+
+    // Signs out the user
+    const handleClickSignOut = (event) => {
+        event.preventDefault();
+
+        localStorage.removeItem('user');
+        
+        props.setUser({});
+        props.setOpenSignDialog(true);
+        props.handleClosePopover()
+    };
+
     return(
         <React.Fragment>
             <ListItem button onClick={() => {props.setGridPreviewApiCategory('likes'); props.handleClosePopover()}} disabled={props.user.access === 'guest' ? true : false}>
                 <ListItemText
-                    primary="Your Likes"
+                    primary='Your Likes'
                 />
             </ListItem>
             <ListItem button onClick={() => {props.setGridPreviewApiCategory('watchlist'); props.handleClosePopover()}} disabled={props.user.access === 'guest' ? true : false}>
                 <ListItemText
-                    primary="Your Watchlist"
+                    primary='Your Watchlist'
                 />
             </ListItem>
-            <ListItem button>
+            <ListItem button onClick={(event) => handleClickOpenCustomizeDialog(event)} disabled={props.user.access === 'guest' ? true : false}>
                 <ListItemText
-                    primary="Account Settings"
+                    primary='Customize'
                 />
             </ListItem>
-            <ListItem className={Signout} button onClick={() => {props.setOpenSignDialog(true); props.handleClosePopover()}}>
+            <ListItem className={Signout} button onClick={(event) => handleClickSignOut(event)}>
                 <ListItemText
-                    primary="Sign Out"
+                    primary='Sign Out'
                 />
             </ListItem>
         </React.Fragment>
@@ -110,7 +128,9 @@ const mapStateToProps = (state) => {
 const matchDispatchToProps = (dispatch) => {
     return bindActionCreators({
         setOpenSignDialog: appActions.setOpenSignDialog,
+        setOpenCustomizeDialog: appActions.setOpenCustomizeDialog,
         setGridPreviewApiCategory: appActions.setGridPreviewApiCategory,
+        setUser: appActions.setUser,
     }, dispatch);
 }
 

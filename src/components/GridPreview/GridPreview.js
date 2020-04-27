@@ -8,28 +8,20 @@ import * as movieActions from '../../actions/apiActions/Movies';
 import * as tvActions from '../../actions/apiActions/TV';
 
 // Fetch Method
-import fetchApi from '../../fetchApi'
+import fetchApi from '../../utils/fetchApi';
 
 // Components
 import RenderDataListItem from '../RenderDataListItem/RenderDataListItem'
 
 // Material UI Components
 import { makeStyles, Grid, TextField, Button, Typography, MenuItem, Hidden, Box } from '@material-ui/core';
-import Pagination from "material-ui-flat-pagination";
+import Pagination from 'material-ui-flat-pagination';
 
 // Icons
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
 
 // Material UI Custom Component Style
 const useStyles = makeStyles((theme) => ({
-    '@media (max-width: 425px)': {
-        Header: {
-            fontSize: theme.typography.h6.fontSize
-        },
-        Results: {
-            fontSize: theme.typography.body2.fontSize
-        },
-    },
     Header: {
         fontWeight: theme.typography.fontWeightBold
     },
@@ -57,21 +49,29 @@ const useStyles = makeStyles((theme) => ({
             boxShadow: 'none',
         }
     },
+    '@media (max-width: 425px)': {
+        Header: {
+            fontSize: theme.typography.h5.fontSize
+        },
+        Results: {
+            fontSize: theme.typography.body2.fontSize
+        },
+    },
 }));
 
-const RenderSortSection = ({sortValue, sortGroup, justify, props, setSortGroup, setSortValue, handleSortChange, handleUpdateSort, handleRemoveSort, StyleButton, StyleSortButton}) => {
+const RenderSortSection = ({Style, props, sortValue, sortGroup, justify, handleSortChange, setSortGroup, setSortValue, handleUpdateSort, handleRemoveSort}) => {
     return(
         <React.Fragment>
-            <Grid item sm={4} container direction="row" justify='flex-start' alignItems="center" spacing={1}>
+            <Grid item sm={4} container direction='row' justify='flex-start' alignItems='center' spacing={1}>
                 <Grid item>
-                    <Typography variant="button">
+                    <Typography variant='button'>
                         Sort by:
                     </Typography>
                 </Grid>
                 <Grid item>
                     <TextField
-                        aria-label="Show Items Select"
-                        color="primary"
+                        aria-label='Show Items Select'
+                        color='primary'
                         fullWidth
                         onChange={handleSortChange}
                         select
@@ -109,12 +109,12 @@ const RenderSortSection = ({sortValue, sortGroup, justify, props, setSortGroup, 
                     </TextField>
                 </Grid>
             </Grid>
-            <Grid item sm={8} container direction="row" justify={justify} alignItems="center">
+            <Grid item sm={8} container direction='row' justify={justify} alignItems='center'>
                 <Box my={1}>
                     {
                         sortGroup.map(item => {
                             return(
-                                <Button key={item.id} className={`${StyleButton} ${StyleSortButton}`} color="primary" disableRipple endIcon={<CloseRoundedIcon />} variant="contained" onMouseDown={() => handleRemoveSort(item)}>
+                                <Button key={item.id} className={`${Style.Button} ${Style.SortButton}`} color='primary' disableRipple endIcon={<CloseRoundedIcon />} variant='contained' onMouseDown={() => handleRemoveSort(item)}>
                                     {item.name}
                                 </Button>
                             );
@@ -318,14 +318,14 @@ const GridPreview = (props) => {
     ])
 
     return (
-        <Grid container direction="column">
-            <Grid item container direction="row" justify="space-between" alignItems="center">
+        <Grid container direction='column'>
+            <Grid item container direction='row' justify='space-between' alignItems='center'>
                 <Grid item>
-                    <Typography className={Style.Header} variant="h4" color="textPrimary">
+                    <Typography className={Style.Header} variant='h4' color='textPrimary'>
                         {`${props.gridPreviewApiTitle} (${props.gridPreviewApiCategory})`}
                     </Typography>
                 </Grid>
-                <Typography className={Style.Results} variant="body1" color="textSecondary">
+                <Typography className={Style.Results} variant='body1' color='textSecondary'>
                     {
                         (props.gridPreviewApiCategory === 'movie')
                             ? `${props.movieTotalResults} ${props.gridPreviewApiCategory}s found`
@@ -335,29 +335,29 @@ const GridPreview = (props) => {
                     }
                 </Typography>
             </Grid>
-            <Grid className={Style.Margin} item container direction="row" justify="space-between">
+            <Grid className={Style.Margin} item container direction='row' justify='space-between'>
                 <Hidden smUp>
-                    <RenderSortSection sortValue={sortValue} sortGroup={sortGroup} justify={'flex-start'} props={props} setSortGroup={setSortGroup} setSortValue={setSortValue} handleSortChange={handleSortChange} handleUpdateSort={handleUpdateSort} handleRemoveSort={handleRemoveSort} StyleButton={Style.Button} StyleSortButton={Style.SortButton} />
+                    <RenderSortSection Style={Style} props={props} sortValue={sortValue} sortGroup={sortGroup} justify={'flex-start'} handleSortChange={handleSortChange} setSortGroup={setSortGroup} setSortValue={setSortValue} handleUpdateSort={handleUpdateSort} handleRemoveSort={handleRemoveSort} />
                 </Hidden>
                 <Hidden xsDown>
-                    <RenderSortSection sortValue={sortValue} sortGroup={sortGroup} justify={'flex-end'} props={props} setSortGroup={setSortGroup} setSortValue={setSortValue} handleSortChange={handleSortChange} handleUpdateSort={handleUpdateSort} handleRemoveSort={handleRemoveSort} StyleButton={Style.Button} StyleSortButton={Style.SortButton} />
+                    <RenderSortSection Style={Style} props={props} sortValue={sortValue} sortGroup={sortGroup} justify={'flex-end'} handleSortChange={handleSortChange} setSortGroup={setSortGroup} setSortValue={setSortValue} handleUpdateSort={handleUpdateSort} handleRemoveSort={handleRemoveSort} />
                 </Hidden>
             </Grid>
             {
                 (props.gridPreviewApiCategory === '' || props.gridPreviewApiType === '')
                     ? null
                         :  
-                        <Grid item container alignItems="flex-start" justify="flex-start" wrap="wrap" spacing={2}>
+                        <Grid item container alignItems='flex-start' justify='flex-start' wrap='wrap' spacing={2}>
                             <RenderDataElements 
                                 props={props} 
                                 sortGroup={sortGroup} 
                             />
                         </Grid>
             }
-            <Grid item container justify="flex-end">
+            <Grid item container justify='flex-end'>
                 <Pagination
-                    currentPageColor="primary"
-                    otherPageColor="default"
+                    currentPageColor='primary'
+                    otherPageColor='default'
                     className={`${Style.Margin} animated fadeInHeader`}
                     disableRipple
                     limit={5}
