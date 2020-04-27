@@ -282,6 +282,8 @@ const AccountSettings = (props) => {
         props.setUser(updatedUser);
 
         handleClickCloseCustomizeDialog();
+
+        window.location.reload();
     } 
 
     return (

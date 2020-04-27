@@ -317,7 +317,7 @@ export default function Signup( {users, handleClickDialog, handleUpdateState} ) 
             <Grid item>
                 <ButtonGroup className={Style.ButtonGroup} disableRipple fullWidth size='large' variant='contained'>
                     <Button className={`${Style.Buttons} ${Style.CancelButton}`} onClick={() => handleClickDialog('in')}>Cancel</Button>
-                    <Button color='secondary' className={`${Style.Buttons} ${Style.SignupButton}`} onClick={(event) => handleSignup(event)} disabled={(usernameError === true || usernameError === null) && (passwordError === true || passwordError === null) ? true : false}>Sign in</Button>
+                    <Button color='secondary' className={`${Style.Buttons} ${Style.SignupButton}`} onClick={(event) => handleSignup(event)} disabled={(usernameError === true || usernameError === null) && (passwordError === true || passwordError === null) ? true : false}>Sign up</Button>
                 </ButtonGroup>
                 <Box mt={0.5} />
                 <Button 

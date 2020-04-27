@@ -154,15 +154,13 @@ const Search = (props) => {
         setShowValue(event.target.value);
         setShowChanged(true);
     }
-
+    
     // Data Page Methods
     const handleClickChangePage = (event, offset, next) => {
         const key = 'c287015949cec13fb17a26e50b4f054a';
 
         event.preventDefault();
-
-        setCurrentOffset(offset);
-        setCurrentPage(next);
+        window.scrollTo(0, 0)
 
         fetch(`https://api.themoviedb.org/3/search/${showValue}?query=${searchValue}&api_key=${key}&language=en-US&&page=${next}&include_adult=false`)
             .then(response => response.json())
@@ -175,6 +173,9 @@ const Search = (props) => {
                 return;
             })
             .catch(error => console.log(error));  
+
+        setCurrentOffset(offset);
+        setCurrentPage(next);
     }
 
     // This method will fetch the api

@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
         fontSize: theme.typography.h1.fontSize,
         fontWeight: theme.typography.fontWeightMedium,
         marginRight: theme.spacing(1),
-        marginBottom: theme.spacing(4),
+        marginBottom: theme.spacing(1),
     },
     Input: {
         borderRadius: theme.shape.borderRadius,
@@ -167,14 +167,17 @@ export default function Signin( {users, handleClickDialog, handleUpdateState} ) 
             if(currentUsers.length === 0){
                 setError(true);
             }else{
+                let userChosen = false;
+
                 currentUsers.forEach(item => {
                     if(usernameValue === item.username && passwordValue === item.password){
                         setError(false);
+                        userChosen = true;
                         handleUpdateState(currentUsers, item);
                         setTimeout(() => {
                             handleClickDialog('correct');
                         }, 500);
-                    }else{
+                    }else if(userChosen === false){
                         setError(true);
                     }
                 });
@@ -249,6 +252,7 @@ export default function Signin( {users, handleClickDialog, handleUpdateState} ) 
                             </Grid>
                         </React.Fragment>
             }
+            <Box mb={2} />
             <Grid item>
                 <Typography variant='body1'>
                     Username

@@ -262,6 +262,7 @@ const RenderDataListItem = (props) => {
     // This method will open the preview page to display further details
     const handleOpenPreview = (item) => {
         props.setPreview(item); 
+        props.setOpenSearchDialog(false);
         props.setGridPreviewApiCategory(props.category);
         props.setGridPreviewApiType('preview');
     }
@@ -281,7 +282,7 @@ const RenderDataListItem = (props) => {
                                                 alt={(props.category === 'tv') ? item.original_name : (props.category === 'movie') ? item.title : ''}
                                                 component='img'
                                                 className={Style.Poster}
-                                                image={`https://image.tmdb.org/t/p/w500/${item.poster_path}`}
+                                                image={item.poster_path === null ? 'https://via.placeholder.com/276x414' : `https://image.tmdb.org/t/p/w500/${item.poster_path}`}
                                                 onMouseDown={() => handleOpenPreview(item)}
                                             />
                                         </CardActionArea>
@@ -331,6 +332,7 @@ const mapStateToProps = (state) => {
   // Sending some data to an action
   const matchDispatchToProps = (dispatch) => {
       return bindActionCreators({
+        setOpenSearchDialog: appActions.setOpenSearchDialog,
         setGridPreviewApiCategory: appActions.setGridPreviewApiCategory,
         setGridPreviewApiType: appActions.setGridPreviewApiType,
         setPreview: appActions.setPreview, 

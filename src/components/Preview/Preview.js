@@ -280,6 +280,26 @@ const Preview = (props) => {
         }, 1000);
     }
 
+    // Taken from: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+    function shuffle(array) {
+        var currentIndex = array.length, temporaryValue, randomIndex;
+      
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+      
+          // Pick a remaining element...
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex -= 1;
+      
+          // And swap it with the current element.
+          temporaryValue = array[currentIndex];
+          array[currentIndex] = array[randomIndex];
+          array[randomIndex] = temporaryValue;
+        }
+      
+        return array;
+      }
+
     useEffect(() => {
         const key = 'c287015949cec13fb17a26e50b4f054a';
 
@@ -288,7 +308,7 @@ const Preview = (props) => {
                 .then(response => response.json())
                 .then(json => {
                     setHasFetched(true);
-                    setFetchedData(json.results);
+                    setFetchedData(shuffle(json.results));
                     return;
                 })
                 .catch(error => console.log(error));  
@@ -316,7 +336,7 @@ const Preview = (props) => {
                     <img 
                         alt={(props.gridPreviewApiCategory === 'tv') ? item.original_name : (props.gridPreviewApiCategory === 'movie') ? item.title : ''}
                         className={Style.Poster}
-                        src={`https://image.tmdb.org/t/p/w780/${item.backdrop_path}`}
+                        src={item.poster_path === null ? 'https://via.placeholder.com/912x515' : `https://image.tmdb.org/t/p/w780/${item.backdrop_path}`}
                     />
                     <Box className={Style.Margin} />
                     <Typography variant='h4'>
@@ -348,14 +368,14 @@ const Preview = (props) => {
                         (fetchedData === {} || fetchedData === undefined)
                             ? null
                                 :
-                                fetchedData.map((item, index) => {
+                                fetchedData.map((fetchedItem, index) => {
                                     return(
-                                        <Box className={`${Style.TrendingItem} animated fadeInSign`} style={{animationDelay: (index % 2 === 0) ? 250 : 750}} key={item.id} my={2} mr={2}>
+                                        <Box className={`${Style.TrendingItem} animated fadeInSign`} style={{animationDelay: (index % 2 === 0) ? 250 : 750}} key={fetchedItem.id} my={2} mr={2}>
                                             <img 
-                                                alt={(props.gridPreviewApiCategory === 'tv') ? item.original_name : (props.gridPreviewApiCategory === 'movie') ? item.title : ''}
+                                                alt={(props.gridPreviewApiCategory === 'tv') ? fetchedItem.original_name : (props.gridPreviewApiCategory === 'movie') ? fetchedItem.title : ''}
                                                 className={Style.SimilarPoster}
-                                                src={`https://image.tmdb.org/t/p/w342/${item.poster_path}`}
-                                                onMouseDown={() => handleOpenPreview(item, props.gridPreviewApiCategory)}
+                                                src={fetchedItem.poster_path === null ? 'https://via.placeholder.com/276x414' : `https://image.tmdb.org/t/p/w342/${fetchedItem.poster_path}`}
+                                                onMouseDown={() => handleOpenPreview(fetchedItem, props.gridPreviewApiCategory)}
                                             />
                                         </Box>
                                     );

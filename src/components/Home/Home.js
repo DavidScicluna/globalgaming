@@ -81,7 +81,7 @@ const RenderHomeApiData = ({Style, props, header, data, dataName, category, hand
                                         <img 
                                             alt={(media === 'tv') ? item.original_name : (media === 'movie') ? item.title : ''}
                                             className={Style.Poster}
-                                            src={`https://image.tmdb.org/t/p/w342/${item.poster_path}`}
+                                            src={item.poster_path === null ? 'https://via.placeholder.com/276x414' : `https://image.tmdb.org/t/p/w342/${item.poster_path}`}
                                             onMouseDown={() => handleOpenPreview(item, media)}
                                         />
                                     </Box>

@@ -14,7 +14,7 @@ import fetchApi from '../../utils/fetchApi';
 import RenderDataListItem from '../RenderDataListItem/RenderDataListItem'
 
 // Material UI Components
-import { makeStyles, Grid, TextField, Button, Typography, MenuItem, Hidden, Box } from '@material-ui/core';
+import { makeStyles, Fade, Grid, TextField, Button, Typography, MenuItem, Hidden, Box } from '@material-ui/core';
 import Pagination from 'material-ui-flat-pagination';
 
 // Icons
@@ -199,6 +199,8 @@ const RenderDataElements = ({props, sortGroup}) => {
 const GridPreview = (props) => {
     const Style = useStyles();
 
+    const [animation, setAnimation] = useState(true);
+
     // Sort Select State
     const [sortValue, setSortValue] = useState('all'); 
     const [sortGroup, setSortGroup] = useState([]); 
@@ -240,10 +242,15 @@ const GridPreview = (props) => {
     // Data Page Methods
     const handleClickChangePage = (event, offset, next) => {
         event.preventDefault();
-        window.scrollTo(0, 0)
 
-        setCurrentOffset(offset);
-        setCurrentPage(next);
+        setAnimation(false);
+        
+        setTimeout(() => {
+            window.scrollTo(0, 0)
+            setAnimation(true);
+            setCurrentOffset(offset);
+            setCurrentPage(next);
+        }, 1500);
     }
 
     useEffect(() => {
@@ -318,55 +325,57 @@ const GridPreview = (props) => {
     ])
 
     return (
-        <Grid container direction='column'>
-            <Grid item container direction='row' justify='space-between' alignItems='center'>
-                <Grid item>
-                    <Typography className={Style.Header} variant='h4' color='textPrimary'>
-                        {`${props.gridPreviewApiTitle} (${props.gridPreviewApiCategory})`}
+        <Fade in={animation} timeout={1500}>
+            <Grid container direction='column'>
+                <Grid item container direction='row' justify='space-between' alignItems='center'>
+                    <Grid item>
+                        <Typography className={Style.Header} variant='h4' color='textPrimary'>
+                            {`${props.gridPreviewApiTitle} (${props.gridPreviewApiCategory})`}
+                        </Typography>
+                    </Grid>
+                    <Typography className={Style.Results} variant='body1' color='textSecondary'>
+                        {
+                            (props.gridPreviewApiCategory === 'movie')
+                                ? `${props.movieTotalResults} ${props.gridPreviewApiCategory}s found`
+                                    : (props.gridPreviewApiCategory === 'tv')
+                                        ? `${props.tvTotalResults} ${props.gridPreviewApiCategory} shows found`
+                                            : ''
+                        }
                     </Typography>
                 </Grid>
-                <Typography className={Style.Results} variant='body1' color='textSecondary'>
-                    {
-                        (props.gridPreviewApiCategory === 'movie')
-                            ? `${props.movieTotalResults} ${props.gridPreviewApiCategory}s found`
-                                : (props.gridPreviewApiCategory === 'tv')
-                                    ? `${props.tvTotalResults} ${props.gridPreviewApiCategory} shows found`
-                                        : ''
-                    }
-                </Typography>
+                <Grid className={Style.Margin} item container direction='row' justify='space-between'>
+                    <Hidden smUp>
+                        <RenderSortSection Style={Style} props={props} sortValue={sortValue} sortGroup={sortGroup} justify={'flex-start'} handleSortChange={handleSortChange} setSortGroup={setSortGroup} setSortValue={setSortValue} handleUpdateSort={handleUpdateSort} handleRemoveSort={handleRemoveSort} />
+                    </Hidden>
+                    <Hidden xsDown>
+                        <RenderSortSection Style={Style} props={props} sortValue={sortValue} sortGroup={sortGroup} justify={'flex-end'} handleSortChange={handleSortChange} setSortGroup={setSortGroup} setSortValue={setSortValue} handleUpdateSort={handleUpdateSort} handleRemoveSort={handleRemoveSort} />
+                    </Hidden>
+                </Grid>
+                {
+                    (props.gridPreviewApiCategory === '' || props.gridPreviewApiType === '')
+                        ? null
+                            :  
+                            <Grid item container alignItems='flex-start' justify='flex-start' wrap='wrap' spacing={2}>
+                                <RenderDataElements 
+                                    props={props} 
+                                    sortGroup={sortGroup} 
+                                />
+                            </Grid>
+                }
+                <Grid item container justify='flex-end'>
+                    <Pagination
+                        currentPageColor='primary'
+                        otherPageColor='default'
+                        className={`${Style.Margin} animated fadeInHeader`}
+                        disableRipple
+                        limit={5}
+                        offset={currentOffset}
+                        total={props.gridPreviewApiCategory === 'movie' ? props.movieTotalPages : props.gridPreviewApiCategory === 'tv' ? props.tvTotalPages : 10}
+                        onClick={(event, offset, page) => handleClickChangePage(event, offset, page)}
+                    />
+                </Grid>
             </Grid>
-            <Grid className={Style.Margin} item container direction='row' justify='space-between'>
-                <Hidden smUp>
-                    <RenderSortSection Style={Style} props={props} sortValue={sortValue} sortGroup={sortGroup} justify={'flex-start'} handleSortChange={handleSortChange} setSortGroup={setSortGroup} setSortValue={setSortValue} handleUpdateSort={handleUpdateSort} handleRemoveSort={handleRemoveSort} />
-                </Hidden>
-                <Hidden xsDown>
-                    <RenderSortSection Style={Style} props={props} sortValue={sortValue} sortGroup={sortGroup} justify={'flex-end'} handleSortChange={handleSortChange} setSortGroup={setSortGroup} setSortValue={setSortValue} handleUpdateSort={handleUpdateSort} handleRemoveSort={handleRemoveSort} />
-                </Hidden>
-            </Grid>
-            {
-                (props.gridPreviewApiCategory === '' || props.gridPreviewApiType === '')
-                    ? null
-                        :  
-                        <Grid item container alignItems='flex-start' justify='flex-start' wrap='wrap' spacing={2}>
-                            <RenderDataElements 
-                                props={props} 
-                                sortGroup={sortGroup} 
-                            />
-                        </Grid>
-            }
-            <Grid item container justify='flex-end'>
-                <Pagination
-                    currentPageColor='primary'
-                    otherPageColor='default'
-                    className={`${Style.Margin} animated fadeInHeader`}
-                    disableRipple
-                    limit={5}
-                    offset={currentOffset}
-                    total={props.gridPreviewApiCategory === 'movie' ? props.movieTotalPages : props.gridPreviewApiCategory === 'tv' ? props.tvTotalPages : 10}
-                    onClick={(event, offset, page) => handleClickChangePage(event, offset, page)}
-                />
-            </Grid>
-        </Grid>
+        </Fade>
     )
 }
 

@@ -52,6 +52,7 @@ const SignDialog = (props) => {
                 setSignInAnimation(true);
                 setSignUpAnimation(true);
 
+                window.location.reload();
                 setTimeout(() => {
                     setCurrentPage('in');
                 }, 1000);

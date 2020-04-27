@@ -39,8 +39,13 @@ const ListItems = ({props, Signout}) => {
 
         localStorage.removeItem('user');
         
+        props.setOpenSignDialog(true)
+        props.setOpenSearchDialog(false)
+        props.setOpenCustomizeDialog(false)
+        props.setGridPreviewApiCategory('')
+        props.setGridPreviewApiType('')
+        props.setGridPreviewApiTitle('')
         props.setUser({});
-        props.setOpenSignDialog(true);
         props.handleClosePopover()
     };
 
@@ -128,8 +133,11 @@ const mapStateToProps = (state) => {
 const matchDispatchToProps = (dispatch) => {
     return bindActionCreators({
         setOpenSignDialog: appActions.setOpenSignDialog,
+        setOpenSearchDialog: appActions.setOpenSearchDialog,
         setOpenCustomizeDialog: appActions.setOpenCustomizeDialog,
         setGridPreviewApiCategory: appActions.setGridPreviewApiCategory,
+        setGridPreviewApiType: appActions.setGridPreviewApiType,
+        setGridPreviewApiTitle: appActions.setGridPreviewApiTitle,
         setUser: appActions.setUser,
     }, dispatch);
 }
